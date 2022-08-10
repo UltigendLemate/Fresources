@@ -14,7 +14,9 @@ model College {
 }
 
 model Branch {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+
   collageId String  @db.ObjectId
   college   College @relation(fields: [collageId], references: [id])
 
@@ -23,7 +25,8 @@ model Branch {
 }
 
 model Course {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  description String
 
   branchIds String[] @db.ObjectId
   branches  Branch[] @relation(fields: [branchIds], references: [id])
@@ -34,7 +37,8 @@ model Course {
 }
 
 model Year {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  year Int
 
   Course   Course @relation(fields: [courseId], references: [id])
   courseId String @db.ObjectId
@@ -45,7 +49,7 @@ model Resource {
   type  ResourceType
   name  String
   url   String
-  likes Int
+  likes Int          @default(0)
 
   Course   Course @relation(fields: [courseId], references: [id])
   courseId String @db.ObjectId

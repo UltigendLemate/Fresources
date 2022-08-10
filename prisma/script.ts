@@ -4,11 +4,33 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.$connect();
+
   await prisma.college.create({
     data: {
       name: 'NSUT',
+      branches: {
+        create: {
+          name: 'CSIOT',
+          courses: {
+            create: {
+              years: { create: { year: 1 } },
+              description: 'Physics',
+              resources: {
+                create: {
+                  name: 'David J Morrin Waves',
+                  type: 'Book',
+                  url: 'https://www.prisma.io',
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
+
+  const allCollages = prisma.college.findMany();
+  console.log(allCollages);
 }
 
 main()
