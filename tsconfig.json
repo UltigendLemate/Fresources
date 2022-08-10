@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "script.ts"
+    "prisma/script.ts"
   ],
   "exclude": [
     "node_modules"
