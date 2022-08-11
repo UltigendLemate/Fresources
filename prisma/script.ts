@@ -4,6 +4,8 @@ const prisma = new PrismaClient();
 
 async function main() {
   await prisma.$connect();
+  await prisma.branch.deleteMany();
+  await prisma.college.deleteMany();
 
   await prisma.college.create({
     data: {
