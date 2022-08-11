@@ -1,191 +1,244 @@
-import axios from 'axios'
-import Head from 'next/head'
-import 'primeicons/primeicons.css'
-import { Dropdown } from 'primereact/dropdown'
-import { FileUpload } from 'primereact/fileupload'
-import { InputText } from 'primereact/inputtext'
-import 'primereact/resources/primereact.min.css'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import type { NextPage } from 'next'
 import { useRef, useState } from 'react'
 
-export default function Admin() {
-  const collegeSelectItems = [
-    { label: 'DTU', value: 'DTU' },
-    { label: 'NSUT', value: 'NSUT' },
-    { label: 'IGDTUW', value: 'IGDTUW' },
-  ]
+interface UploadItem {
+  name: string
+  college: string
+  course: string
+  file: File
+}
 
-  const yearSelectItems = [
-    { label: 'First', value: 'first' },
-    { label: 'Second', value: 'second' },
-  ]
+const COLLEGE_LIST: { college: string; courses: string[] }[] = [
+  {
+    college: 'DTU',
+    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
+  },
+  {
+    college: 'NSUT',
+    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
+  },
+  {
+    college: 'IGDTUW',
+    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
+  },
+  {
+    college: 'IIIT',
+    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
+  },
+]
 
-  const subjectSelectItems = [
-    { label: 'Maths', value: 'maths' },
-    { label: 'Physics', value: 'physics' },
-    { label: 'Chemistry', value: 'chemistry' },
-    { label: 'Computer', value: 'computer' },
-  ]
+const Admin: NextPage = () => {
+  //states
+  const [progressState, setProgressState] = useState(0)
+  const [files, setFiles] = useState<UploadItem[]>([])
 
-  const topicSelectItems = [
-    { label: 'Book', value: 'book' },
-    { label: 'Assignment', value: 'assignment' },
-    { label: 'Paper', value: 'paper' },
-    { label: 'Playlist', value: 'playlist' },
-    { label: 'Experiment', value: 'experiment' },
-    { label: 'Notes', value: 'notes' },
-  ]
-
-  const [formData, setFormData] = useState({
-    college: collegeSelectItems[0],
-    year: yearSelectItems[0],
-    subject: subjectSelectItems[0],
-    topic: topicSelectItems[0],
-    name: '',
-  })
-
-  const [files, setFiles] = useState<File[]>([])
+  //refs
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const uploadHandler = async (event: any) => {
-    for (let i = 0; i < files.length; i++) {
-      console.log(files[i])
-      let uploadData = new FormData()
-      uploadData.append(files[i].name, files[i])
-      for (let pair of uploadData.entries()) {
-        console.log(pair[0] + ', ' + pair[1])
-      }
-      let { data } = await axios.post('/api/upload', {
-        name: files[i].name,
-        type: files[i].type,
-        files: {
-          demo: JSON.stringify(uploadData),
-        },
+  const upload = async (e: any) => {
+    for (let file of files) {
+      let xhr = new XMLHttpRequest()
+      let formData = new FormData()
+
+      formData.append(
+        'demo',
+        file.file,
+        `${file.college}/${file.course}/${file.name}`
+      )
+
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded * 100) / event.total)
+          setProgressState(progress)
+        }
       })
-      console.log(data)
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          setProgressState(0)
+
+          if (xhr.status >= 200 && xhr.status < 300) {
+            console.log('done')
+            setFiles((prev) => {
+              return prev.filter((f) => f !== file)
+            })
+          } else {
+            console.log('error')
+          }
+        }
+      }
+      xhr.open('POST', '/api/upload', true)
+      // xhr.withCredentials = props.withCredentials
+      xhr.send(formData)
     }
   }
 
-  const handleChange = async (event: any) => {
-    let fileArray: File[] = []
-    for (let i = 0; i < event.target.files.length; i++) {
-      fileArray.push(event.target.files[i])
-      const Form = new FormData()
-      Form.append('file', event.target.files[i])
-      console.log(Form)
+  const handleAddFile = (event: any) => {
+    let fileArray: UploadItem[] = []
+    for (let file of event.target.files) {
+      fileArray.push({ file, name: file.name, college: 'DTU', course: 'AC102' })
     }
     setFiles((prev) => {
       return [...prev, ...fileArray]
     })
   }
 
-  const chooseHandler = (event: any) => {
-    input_ref.current?.click()
+  const calculateFileSize = (bytes: number) => {
+    if (bytes === 0) {
+      return '0 B'
+    }
+    let k = 1000,
+      dm = 3,
+      sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+      i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
   }
+
+  const nameChangeHandler = (name: string, index: number) => {
+    setFiles((prev) => {
+      const extention = prev[index].name.split('.').pop()
+      console.log(`${name}.${extention}`)
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], name: `${name}.${extention}` },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  const collegeChangeHandler = (college: string, index: number) => {
+    setFiles((prev) => {
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], college },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  console.log(files)
 
   return (
     <div>
-      <Head>
-        <title>Movie Titles</title>
-        <meta name='description' content='Generated by create next app' />
-        <link rel='icon' href='/favicon.ico' />
-      </Head>
-      <Dropdown
-        value={formData.college}
-        options={collegeSelectItems}
-        onChange={(e) =>
-          setFormData((prev) => {
-            return { ...prev, college: e.value }
-          })
-        }
-        placeholder='Select a College'
-      />
-      <Dropdown
-        value={formData.year}
-        options={yearSelectItems}
-        onChange={(e) =>
-          setFormData((prev) => {
-            return { ...prev, year: e.value }
-          })
-        }
-        placeholder='Select a Year'
-      />
-      <Dropdown
-        value={formData.subject}
-        options={subjectSelectItems}
-        onChange={(e) =>
-          setFormData((prev) => {
-            return { ...prev, subject: e.value }
-          })
-        }
-        placeholder='Select a Subject'
-      />
-      <Dropdown
-        value={formData.topic}
-        options={topicSelectItems}
-        onChange={(e) =>
-          setFormData((prev) => {
-            return { ...prev, topic: e.value }
-          })
-        }
-        placeholder='Select a Topic'
-      />
-      <InputText
-        value={formData.name}
-        onChange={(e) =>
-          setFormData((prev) => {
-            return { ...prev, name: e.target.value }
-          })
-        }
-      />
-
-      <FileUpload
-        name='demo'
-        uploadHandler={uploadHandler}
-        url='/api/upload'
-        multiple
-      />
       <input
         type={'file'}
         multiple
-        onChange={handleChange}
+        onChange={handleAddFile}
         ref={input_ref}
         className='hidden'
       />
-      <div className='flex gap-2'>
-        <div
-          onClick={chooseHandler}
-          className='bg-blue-500 text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer'
-        >
-          Choose
+      {/* <div className='text-2xl'>{progressState}</div> */}
+
+      <div className='px-4 py-4'>
+        <div id='options' className='flex gap-4'>
+          <div
+            onClick={() => input_ref.current?.click()}
+            className='bg-blue-500 text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer'
+          >
+            Choose
+          </div>
+          <button
+            onClick={upload}
+            className={`${
+              files.length > 0
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+          >
+            Upload
+          </button>
+          <div
+            onClick={() => setFiles([])}
+            className={`${
+              files.length > 0
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+          >
+            Cancel
+          </div>
         </div>
-        <div
-          onClick={uploadHandler}
-          className='bg-blue-300 text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer'
-        >
-          Upload
+        <div className=' flex flex-col gap-2 mt-4 w-full'>
+          {files
+            .map((file, idx) => {
+              return (
+                <div key={idx}>
+                  <div className='py-4 px-4 rounded-lg bg-slate-900 w-full text-white flex justify-between'>
+                    <div>
+                      {file.name} ({calculateFileSize(file.file.size)})
+                    </div>
+                    <div className='flex gap-2'>
+                      <select
+                        className='text-black'
+                        onClick={(e: any) => {
+                          collegeChangeHandler(e.target?.value, idx)
+                        }}
+                      >
+                        {COLLEGE_LIST.map((college) => {
+                          return (
+                            <option
+                              key={college.college}
+                              value={college.college}
+                            >
+                              {college.college}
+                            </option>
+                          )
+                        })}
+                      </select>
+                      {/* <select
+                        className='text-black'
+                        onClick={(e: any) => {
+                          collegeChangeHandler(e.target?.value, idx)
+                        }}
+                      >
+                        {COLLEGE_LIST.map((college) => {
+                          return (
+                            <option
+                              key={college.college}
+                              value={college.college}
+                            >
+                              {college.college}
+                            </option>
+                          )
+                        })}
+                      </select> */}
+                      <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
+                        Edit Name
+                      </div>
+                      <div
+                        className='bg-red-700 px-3 rounded-lg cursor-pointer'
+                        onClick={() => {
+                          setFiles((prev) => {
+                            return [
+                              ...prev.slice(0, idx),
+                              ...prev.slice(idx + 1),
+                            ]
+                          })
+                        }}
+                      >
+                        Remove
+                      </div>
+                    </div>
+                  </div>
+                  <div className='flex'>
+                    <input
+                      type={'text'}
+                      className='border-2 rounded-l-lg px-4'
+                      onChange={(e) => nameChangeHandler(e.target.value, idx)}
+                    />
+                    <button className='border-2 px-4 py-2 rounded-r-lg border-l-0 bg-blue-800 text-white'>
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              )
+            })
+            .reverse()}
         </div>
-        <div
-          onClick={() => setFiles([])}
-          className='bg-blue-300 text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer'
-        >
-          Cancel
-        </div>
-      </div>
-      <div className=' flex flex-col gap-2 mt-4'>
-        {files
-          .map((file, idx) => {
-            return (
-              <div
-                key={idx}
-                className='py-4 px-2 rounded-lg bg-slate-900 w-1/2 text-white text-center'
-              >
-                {file.name}
-              </div>
-            )
-          })
-          .reverse()}
       </div>
     </div>
   )
 }
+
+export default Admin
