@@ -1,27 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model College {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  name     String   @unique
+  branches Branch[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Branch {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+
+  collegeId String  @db.ObjectId
+  college   College @relation(fields: [collegeId], references: [id])
+
+  courseIds String[] @db.ObjectId
+  courses   Course[] @relation(fields: [courseIds], references: [id])
+}
+
+model Course {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+
+  branchIds String[] @db.ObjectId
+  branches  Branch[] @relation(fields: [branchIds], references: [id])
+
+  years Year[]
+
+  resources Resource[]
+}
+
+model Year {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  year Int
+
+  Course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+}
+
+model Resource {
+  id      String       @id @default(auto()) @map("_id") @db.ObjectId
+  type    ResourceType
+  name    String
+  url     String
+  upvotes Int          @default(0)
+
+  Course   Course @relation(fields: [courseId], references: [id])
+  courseId String @db.ObjectId
+}
+
+enum ResourceType {
+  Book
+  Assignment
+  Note
+  Project
+  Paper
+  Playlist
 }
