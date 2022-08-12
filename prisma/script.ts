@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 async function main() {
-  await prisma.$connect();
-  await prisma.branch.deleteMany();
-  await prisma.college.deleteMany();
+  await prisma.$connect()
+  await prisma.branch.deleteMany()
+  await prisma.college.deleteMany()
 
   await prisma.college.create({
     data: {
@@ -29,18 +29,18 @@ async function main() {
         },
       },
     },
-  });
+  })
 
-  const allCollages = prisma.college.findMany();
-  console.log(allCollages);
+  const allColleges = prisma.college.findMany()
+  console.log(allColleges)
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await prisma.$disconnect()
   })
   .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
