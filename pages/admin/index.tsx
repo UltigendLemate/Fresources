@@ -29,7 +29,7 @@ const COLLEGE_LIST: { college: string; courses: string[] }[] = [
 
 const Admin: NextPage = () => {
   //states
-  const [progressState, setProgressState] = useState(0)
+  const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
 
   //refs
