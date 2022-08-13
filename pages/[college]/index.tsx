@@ -17,7 +17,7 @@ export const getStaticPaths = async () => {
   console.log(colleges)
   const paths = colleges.map((college) => {
     return {
-      params: { college: college.name },
+      params: { college: college.name.toLowerCase() },
     }
   })
 
