@@ -2,10 +2,18 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function main() {
-  await prisma.$connect()
+const dropDatabase = async () => {
   await prisma.branch.deleteMany()
   await prisma.college.deleteMany()
+  await prisma.year.deleteMany()
+  await prisma.course.deleteMany()
+  await prisma.resource.deleteMany()
+}
+
+async function main() {
+  await prisma.$connect()
+
+  await dropDatabase()
 
   await prisma.college.create({
     data: {

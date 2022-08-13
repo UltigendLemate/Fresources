@@ -8,7 +8,8 @@
     "lint": "next lint",
     "migrate": "prisma migrate dev --name init",
     "studio": "prisma studio",
-    "init": "npx prisma init --datasource-provider sqlite",
+    "init": "prisma init --datasource-provider mongodb",
+    "seed": "ts-node prisma/script.ts",
     "prettier": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
