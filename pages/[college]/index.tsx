@@ -14,7 +14,7 @@ const College = (props: Props) => {
 
 export const getStaticPaths = async () => {
   const colleges = await prisma.college.findMany()
-  console.log(colleges)
+  // console.log(colleges)
   const paths = colleges.map((college) => {
     return {
       params: { college: college.name },

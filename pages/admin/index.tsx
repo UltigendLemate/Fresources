@@ -1,33 +1,45 @@
-import type { NextPage } from 'next'
+import { Branch, College, Course } from '@prisma/client'
+import type { GetStaticProps, NextPage } from 'next'
 import { useRef, useState } from 'react'
+import { prisma } from '../../src/prisma'
 
 interface UploadItem {
   name: string
   college: string
-  course: string
+  course: string | null
   file: File
 }
 
-const COLLEGE_LIST: { college: string; courses: string[] }[] = [
-  {
-    college: 'DTU',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'NSUT',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'IGDTUW',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'IIIT',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-]
+type Props = {
+  branches: (Branch & {
+    college: College
+    courses: Course[]
+  })[]
+}
 
-const Admin: NextPage = () => {
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const branches = await prisma.branch.findMany({
+    include: { college: true, courses: true },
+  })
+
+  return {
+    props: { branches },
+  }
+}
+
+const calculateFileSize = (bytes: number) => {
+  if (bytes === 0) {
+    return '0 B'
+  }
+  let k = 1000,
+    dm = 3,
+    sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
+
+const Admin: NextPage<Props> = (props) => {
   //states
   const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
@@ -76,23 +88,16 @@ const Admin: NextPage = () => {
   const handleAddFile = (event: any) => {
     let fileArray: UploadItem[] = []
     for (let file of event.target.files) {
-      fileArray.push({ file, name: file.name, college: 'DTU', course: 'AC102' })
+      fileArray.push({
+        file,
+        name: file.name,
+        college: props.branches[0].college.name,
+        course: null,
+      })
     }
     setFiles((prev) => {
       return [...prev, ...fileArray]
     })
-  }
-
-  const calculateFileSize = (bytes: number) => {
-    if (bytes === 0) {
-      return '0 B'
-    }
-    let k = 1000,
-      dm = 3,
-      sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-      i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
   }
 
   const nameChangeHandler = (name: string, index: number) => {
@@ -112,6 +117,16 @@ const Admin: NextPage = () => {
       return [
         ...prev.slice(0, index),
         { ...prev[index], college },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  const courseChangeHandler = (course: string, index: number) => {
+    setFiles((prev) => {
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], course },
         ...prev.slice(index + 1),
       ]
     })
@@ -175,34 +190,30 @@ const Admin: NextPage = () => {
                           collegeChangeHandler(e.target?.value, idx)
                         }}
                       >
-                        {COLLEGE_LIST.map((college) => {
+                        {props.branches.map(({ college }) => {
                           return (
-                            <option
-                              key={college.college}
-                              value={college.college}
-                            >
-                              {college.college}
+                            <option key={college.name} value={college.name}>
+                              {college.name}
                             </option>
                           )
                         })}
                       </select>
-                      {/* <select
+                      <select
                         className='text-black'
                         onClick={(e: any) => {
-                          collegeChangeHandler(e.target?.value, idx)
+                          courseChangeHandler(e.target?.value, idx)
                         }}
                       >
-                        {COLLEGE_LIST.map((college) => {
-                          return (
-                            <option
-                              key={college.college}
-                              value={college.college}
-                            >
-                              {college.college}
-                            </option>
-                          )
-                        })}
-                      </select> */}
+                        {props.branches
+                          .find((e) => e.college.name === file.college)
+                          ?.courses.map(({ description }) => {
+                            return (
+                              <option key={description} value={description}>
+                                {description}
+                              </option>
+                            )
+                          })}
+                      </select>
                       <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
                         Edit Name
                       </div>
