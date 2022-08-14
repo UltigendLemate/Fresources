@@ -1,32 +1,31 @@
 import { Branch, College, Course } from '@prisma/client'
-import type { GetStaticProps, NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import { useRef, useState } from 'react'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
   name: string
-  college: string
-  course: string | null
-  courseId: string
+  collegeId: string
+  courseIds: string[]
   file: File
 }
 
 export type Metadata = Omit<UploadItem, 'file'>
 
 type Props = {
-  branches: (Branch & {
-    college: College
-    courses: Course[]
+  colleges: (College & {
+    branches: (Branch & {
+      courses: Course[]
+    })[]
   })[]
 }
 
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  const branches = await prisma.branch.findMany({
-    include: { college: true, courses: true },
+export const getStaticProps: GetServerSideProps<Props> = async () => {
+  const colleges = await prisma.college.findMany({
+    include: { branches: { include: { courses: true } } },
   })
-
   return {
-    props: { branches },
+    props: { colleges },
   }
 }
 
@@ -43,6 +42,7 @@ const calculateFileSize = (bytes: number) => {
 }
 
 const Admin: NextPage<Props> = (props) => {
+  console.log(props.colleges)
   //states
   const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
@@ -50,7 +50,7 @@ const Admin: NextPage<Props> = (props) => {
   //refs
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = async (e: any) => {
+  const upload = async (_e: any) => {
     for (const file of files) {
       const xhr = new XMLHttpRequest()
       const formData = new FormData()
@@ -83,11 +83,10 @@ const Admin: NextPage<Props> = (props) => {
       formData.append(
         'metadata',
         JSON.stringify({
-          college: file.college,
-          course: file.course,
-          courseId: file.courseId,
+          collegeId: file.collegeId,
+          courseIds: [...new Set(file.courseIds)],
           name: file.name,
-        })
+        } as Metadata)
       )
 
       xhr.send(formData)
@@ -100,9 +99,8 @@ const Admin: NextPage<Props> = (props) => {
       fileArray.push({
         file,
         name: file.name,
-        college: props.branches[0].college.name,
-        course: props.branches[0].courses[0].description,
-        courseId: props.branches[0].courses[0].id,
+        collegeId: props.colleges[0].id,
+        courseIds: [props.colleges[0].branches[0].courses[0].id],
       })
     }
     setFiles((prev) => {
@@ -133,14 +131,28 @@ const Admin: NextPage<Props> = (props) => {
   }
 
   const courseChangeHandler = (
-    course: string,
     courseId: string,
+    courseIdIndex: number,
     index: number
   ) => {
     setFiles((prev) => {
+      const newCourseIds = [...prev[index].courseIds]
+      newCourseIds[courseIdIndex] = courseId
       return [
         ...prev.slice(0, index),
-        { ...prev[index], course, courseId },
+        { ...prev[index], courseIds: newCourseIds },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  const addCourseHandler = (index: number) => {
+    setFiles((prev) => {
+      const newCourseIds = [...prev[index].courseIds]
+      newCourseIds.push(props.colleges[0].branches[0].courses[0].id)
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], courseIds: newCourseIds },
         ...prev.slice(index + 1),
       ]
     })
@@ -157,7 +169,8 @@ const Admin: NextPage<Props> = (props) => {
         ref={input_ref}
         className='hidden'
       />
-      {/* <div className='text-2xl'>{progressState}</div> */}
+
+      {/* <div className='text-2xl'>{_progressState}</div> */}
 
       <div className='px-4 py-4'>
         <div id='options' className='flex gap-4'>
@@ -204,39 +217,42 @@ const Admin: NextPage<Props> = (props) => {
                           collegeChangeHandler(e.target?.value, idx)
                         }}
                       >
-                        {props.branches.map(({ college }) => {
+                        {props.colleges.map(({ name, id }) => {
                           return (
-                            <option key={college.name} value={college.name}>
-                              {college.name}
+                            <option key={name} value={id}>
+                              {name}
                             </option>
                           )
                         })}
                       </select>
-                      <select
-                        className='text-black'
-                        onChange={(e) => {
-                          courseChangeHandler(
-                            e.target?.value,
-                            props.branches
-                              .find((e) => e.college.name === file.college)
-                              ?.courses.find(
-                                (course) =>
-                                  course.description === e.target.value
-                              )?.id!,
-                            idx
-                          )
-                        }}
-                      >
-                        {props.branches
-                          .find((e) => e.college.name === file.college)
-                          ?.courses.map(({ description }) => {
-                            return (
-                              <option key={description} value={description}>
-                                {description}
-                              </option>
+                      {file.courseIds.map((_courseId, courseIdIdx) => (
+                        <select
+                          className='text-black'
+                          key={_courseId + courseIdIdx}
+                          onChange={(e) =>
+                            courseChangeHandler(
+                              e.target?.value,
+                              courseIdIdx,
+                              idx
                             )
-                          })}
-                      </select>
+                          }
+                        >
+                          {props.colleges
+                            .find((c) => c.id === file.collegeId)
+                            ?.branches.flatMap((b) => b.courses)
+                            .map((course) => (
+                              <option
+                                key={course.description}
+                                value={course.id}
+                              >
+                                {course.description}
+                              </option>
+                            ))}
+                        </select>
+                      ))}
+                      <button onClick={(e) => addCourseHandler(idx)}>
+                        Add Course
+                      </button>
                       <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
                         Edit Name
                       </div>

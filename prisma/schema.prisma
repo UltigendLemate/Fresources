@@ -33,7 +33,8 @@ model Course {
 
   years Year[]
 
-  resources Resource[]
+  resourceIds String[]   @db.ObjectId
+  resources   Resource[] @relation(fields: [resourceIds], references: [id])
 }
 
 model Year {
@@ -51,8 +52,8 @@ model Resource {
   url     String
   upvotes Int          @default(0)
 
-  Course   Course @relation(fields: [courseId], references: [id])
-  courseId String @db.ObjectId
+  Course    Course[] @relation(fields: [courseIds], references: [id])
+  courseIds String[] @db.ObjectId
 }
 
 enum ResourceType {
