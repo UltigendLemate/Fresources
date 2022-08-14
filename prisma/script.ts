@@ -19,27 +19,46 @@ async function main() {
     data: {
       name: 'NSUT',
       branches: {
-        create: {
-          name: 'CSIOT',
-          courses: {
-            create: {
-              years: { create: { year: 1 } },
-              description: 'Physics',
-              resources: {
-                create: {
-                  name: 'David J Morrin Waves',
-                  type: 'Book',
-                  url: 'https://www.prisma.io',
+        create: [
+          {
+            name: 'CSIOT',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Physics',
+                  resources: {
+                    create: {
+                      name: 'David J Morrin Waves',
+                      type: 'Book',
+                      url: 'https://www.prisma.io',
+                    },
+                  },
                 },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Basics of Mechanical Engineering',
+                },
+              ],
+            },
+          },
+          {
+            name: 'BIOTECH',
+            courses: {
+              create: {
+                years: { create: { year: 1 } },
+                description: 'Physics for BT',
               },
             },
           },
-        },
+        ],
       },
     },
   })
 
-  const allCollages = prisma.college.findMany()
+  prisma.branch.createMany
+
+  const allCollages = await prisma.college.findMany()
   console.log(allCollages)
 }
 
