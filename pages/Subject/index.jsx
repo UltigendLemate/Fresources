@@ -17,9 +17,7 @@ function Subject(props) {
         >
           {subject}
         </button>
-        {/* <div onClick={() => setIsActive(subject)} >
-                    <Button.Glass key={subject} value={subject} />
-                </div> */}
+
       </>
     )
   })
@@ -47,7 +45,7 @@ function Subject(props) {
                 className='py-3 my-3 lg:py-5 rounded-lg w-[90%] hover:glass-gradient border-transparent text-white border-2 
                                 drop-shadow-lg mx-auto md:max-w-screen-sm text-center text-md md:text-lg lg:text-2xl  glass shadow-2xl
                                 bg-babla hover:border-[#f5a607] cursor-pointer '
-                key={note}
+                key={index}
               >
                 {note}
                 {/* <button className=' self-center ml-2 '><svg width="24" height="24"  ><path d="M12 4 3 15h6v5h6v-5h6z" className="icon_svg-stroke icon_svg-fill" stroke-width="1.5" stroke="#666" fill="none" stroke-linejoin="round"></path></svg></button> */}
