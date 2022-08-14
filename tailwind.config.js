@@ -12,6 +12,10 @@ module.exports = {
         inter: 'Inter',
       },
       colors: {
+        babli: '#11101D',
+        babu: '#2c2859',
+        bablu: '#020221',
+        babla: "rgba(2, 20, 53, 9)",
         primary: {
           blue: '#020317',
           red: '#923535',
