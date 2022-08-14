@@ -17,7 +17,6 @@ function Subject(props) {
         >
           {subject}
         </button>
-
       </>
     )
   })
