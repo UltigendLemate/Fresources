@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk'
-import formidable from 'formidable'
+import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
-
-const BASE_UPLOAD_URL = 'https://data-storage.sgp1.digitaloceanspaces.com/'
+import { prisma } from '~/prisma'
+import { Metadata } from '../admin'
 
 const s3Client = new AWS.S3({
   endpoint: process.env.DO_SPACES_URL as string,
@@ -24,29 +24,40 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const form = formidable()
-  form.parse(req, async (_err, _fields, files) => {
-    console.log('files: ', files.demo)
-    if (!files.demo) {
+  const form = new formidable.IncomingForm()
+  form.parse(req, async (_err, fields, files): Promise<any> => {
+    if (!files.file) {
       res.status(400).send('No file uploaded')
       return
     }
+
+    const metadata: Metadata = JSON.parse(fields['metadata'] as string)
+
     try {
+      const file = files.file as File
       const data = s3Client.putObject(
         {
           Bucket: process.env.DO_SPACES_BUCKET as string,
-          Key: (files.demo as any).originalFilename,
-          ContentType: 'application/pdf',
-          Body: fs.createReadStream((files.demo as any).filepath),
+          Key: `${metadata.college}/${metadata.course}/${metadata.name}`,
+          ContentType: file.mimetype!,
+          Body: fs.createReadStream(file.filepath),
           ACL: 'public-read',
         },
-        async () => {
-          // prisma.resource.create()
-          res.status(201).send('File uploaded')
+        async (_e) => {
+          if (_e) res.status(500).send(`File Upload error ${_e}`)
+          else res.status(201).send(`File Upload Succeeded : ${resourceURL}`)
         }
       )
-      console.log(data)
-      return data
+      const resourceURL = `https://${data.httpRequest.endpoint.host}${data.httpRequest.path}`
+      await prisma.resource.create({
+        data: {
+          url: resourceURL,
+          name: metadata.name,
+          type: 'Assignment',
+          courseId: metadata.courseId,
+        },
+      })
+      console.log(resourceURL)
     } catch (e) {
       console.log(e)
       res.status(500).send('Error uploading file')

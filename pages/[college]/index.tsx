@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next/types'
 import { ParsedUrlQuery } from 'querystring'
-import { prisma } from '../../src/prisma'
+import { prisma } from '~/prisma'
 
 type Props = { college: string }
 

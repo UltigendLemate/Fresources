@@ -39,6 +39,7 @@
 }
 
 .fresources {
-  -webkit-box-reflect: below 0.7rem -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(0.2, transparent), to(rgba(255, 255, 255, 0.5)));
+  -webkit-box-reflect: below 0.7rem -webkit-gradient(linear, left top, left
+        bottom, from(transparent), color-stop(0.2, transparent), to(rgba(255, 255, 255, 0.5)));
   line-height: 0.65em;
 }

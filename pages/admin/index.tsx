@@ -1,14 +1,17 @@
 import { Branch, College, Course } from '@prisma/client'
 import type { GetStaticProps, NextPage } from 'next'
 import { useRef, useState } from 'react'
-import { prisma } from '../../src/prisma'
+import { prisma } from '~/prisma'
 
 interface UploadItem {
   name: string
   college: string
   course: string | null
+  courseId: string
   file: File
 }
+
+export type Metadata = Omit<UploadItem, 'file'>
 
 type Props = {
   branches: (Branch & {
@@ -48,15 +51,11 @@ const Admin: NextPage<Props> = (props) => {
   const input_ref = useRef<HTMLInputElement>(null)
 
   const upload = async (e: any) => {
-    for (let file of files) {
-      let xhr = new XMLHttpRequest()
-      let formData = new FormData()
+    for (const file of files) {
+      const xhr = new XMLHttpRequest()
+      const formData = new FormData()
 
-      formData.append(
-        'demo',
-        file.file,
-        `${file.college}/${file.course}/${file.name}`
-      )
+      formData.append('file', file.file)
 
       xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
@@ -80,7 +79,17 @@ const Admin: NextPage<Props> = (props) => {
         }
       }
       xhr.open('POST', '/api/upload', true)
-      // xhr.withCredentials = props.withCredentials
+
+      formData.append(
+        'metadata',
+        JSON.stringify({
+          college: file.college,
+          course: file.course,
+          courseId: file.courseId,
+          name: file.name,
+        })
+      )
+
       xhr.send(formData)
     }
   }
@@ -92,7 +101,8 @@ const Admin: NextPage<Props> = (props) => {
         file,
         name: file.name,
         college: props.branches[0].college.name,
-        course: null,
+        course: props.branches[0].courses[0].description,
+        courseId: props.branches[0].courses[0].id,
       })
     }
     setFiles((prev) => {
@@ -122,11 +132,15 @@ const Admin: NextPage<Props> = (props) => {
     })
   }
 
-  const courseChangeHandler = (course: string, index: number) => {
+  const courseChangeHandler = (
+    course: string,
+    courseId: string,
+    index: number
+  ) => {
     setFiles((prev) => {
       return [
         ...prev.slice(0, index),
-        { ...prev[index], course },
+        { ...prev[index], course, courseId },
         ...prev.slice(index + 1),
       ]
     })
@@ -200,8 +214,17 @@ const Admin: NextPage<Props> = (props) => {
                       </select>
                       <select
                         className='text-black'
-                        onClick={(e: any) => {
-                          courseChangeHandler(e.target?.value, idx)
+                        onChange={(e) => {
+                          courseChangeHandler(
+                            e.target?.value,
+                            props.branches
+                              .find((e) => e.college.name === file.college)
+                              ?.courses.find(
+                                (course) =>
+                                  course.description === e.target.value
+                              )?.id!,
+                            idx
+                          )
                         }}
                       >
                         {props.branches
