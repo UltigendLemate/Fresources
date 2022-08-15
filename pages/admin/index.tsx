@@ -20,15 +20,6 @@ type Props = {
   })[]
 }
 
-export const getStaticProps: GetServerSideProps<Props> = async () => {
-  const colleges = await prisma.college.findMany({
-    include: { branches: { include: { courses: true } } },
-  })
-  return {
-    props: { colleges },
-  }
-}
-
 const calculateFileSize = (bytes: number) => {
   if (bytes === 0) {
     return '0 B'
@@ -292,3 +283,12 @@ const Admin: NextPage<Props> = (props) => {
 }
 
 export default Admin
+
+export const getStaticProps: GetServerSideProps<Props> = async () => {
+  const colleges = await prisma.college.findMany({
+    include: { branches: { include: { courses: true } } },
+  })
+  return {
+    props: { colleges },
+  }
+}
