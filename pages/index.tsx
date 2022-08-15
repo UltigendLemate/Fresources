@@ -1,3 +1,4 @@
+import Layout from 'components/utility/Layout'
 import type { NextPage } from 'next'
 import Button from '../components/utility/Button'
 import GlassSearch from '../components/utility/GlassSearch'
@@ -5,10 +6,16 @@ import { colleges } from '../dataset'
 
 const Home: NextPage = () => {
   const collegeButtons = colleges.map((college) => {
-    return <Button.Glass value={college} key={college} />
+    return (
+      <Button.Glass
+        value={college}
+        key={college}
+        href={`/${college.toLowerCase()}`}
+      />
+    )
   })
   return (
-    <div className='text-white w-screen h-screen pt-8 flex flex-col gap-16 items-center overflow-x-hidden'>
+    <Layout className='text-white w-screen h-screen pt-8 flex flex-col gap-16 items-center overflow-x-hidden'>
       <div className='w-full md:w-2/3 px-8'>
         <GlassSearch />
       </div>
@@ -20,12 +27,7 @@ const Home: NextPage = () => {
           {collegeButtons}
         </div>
       </div>
-      <div className='absolute top-0 h-screen w-screen overflow-hidden bg-gradient-to-b  glass-gradient -z-10'>
-        <div className='ball bg-primary-red -left-20 bottom-4 opacity-30' />
-        <div className='ball bg-primary-green right-8 -bottom-10 opacity-60' />
-        <div className='ball bg-primary-violet right-10 top-0 opacity-30' />
-      </div>
-    </div>
+    </Layout>
   )
 }
 
