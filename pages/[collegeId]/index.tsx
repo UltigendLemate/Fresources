@@ -27,13 +27,19 @@ const Index: NextPage<Props> = (props: Props) => {
         />
         <div>
           <Link href='/'>
-            <Button.Glass value='1st year' />
+            <a>
+              <Button.Glass value='1st year' />
+            </a>
           </Link>
           <Link href='/'>
-            <Button.Glass value='2st year' />
+            <a>
+              <Button.Glass value='2st year' />
+            </a>
           </Link>
           <Link href='/'>
-            <Button.Glass value='3st year' />
+            <a>
+              <Button.Glass value='3st year' />
+            </a>
           </Link>
         </div>
       </div>
