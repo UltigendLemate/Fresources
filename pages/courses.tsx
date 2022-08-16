@@ -9,11 +9,7 @@ type Props = {
 
 const Courses: NextPage<Props> = (props: Props) => {
   const branchButtons = branch.map((course) => {
-    return (
-      <div>
-        <Button.Glass value={course} key={course} />
-      </div>
-    )
+    return <Button.Glass value={course} key={course} />
   })
 
   return (

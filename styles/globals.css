@@ -20,7 +20,6 @@
   );
 }
 
-
 .glass {
   box-shadow: inset 16.17px -16.17px 16.17px rgba(165, 165, 165, 0.09),
     inset -16.17px 16.17px 16.17px rgba(165, 165, 165, 0.09),
@@ -42,12 +41,11 @@
 .dropdownIcons {
   @apply w-full  rounded-xl font-bold text-2xl 
   glass shadow-[rgba(255,255,255,0.50)] duration-300 transition border-2 border-transparent 
-  hover:border-[#f5a607] px-8 py-4 md:py-4 md:px-6
-
+  hover:border-[#f5a607] px-8 py-4 md:py-4 md:px-6;
 }
 
 .dead-center {
-  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+  @apply absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2;
 }
 
 .fresources {
@@ -56,13 +54,11 @@
   line-height: 0.65em;
 }
 
-
 .sublist {
   transform: scaleY(0);
   transform-origin: top;
   transition: 0.3s;
 }
 
-.links{
-  
+.links {
 }
