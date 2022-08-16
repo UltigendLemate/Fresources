@@ -19,6 +19,12 @@
       "~/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "prisma/script.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "prisma/script.ts",
+    "pages/Subject/index.jsx"
+  ],
   "exclude": ["node_modules"]
 }

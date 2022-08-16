@@ -24,7 +24,7 @@ const calculateFileSize = (bytes: number) => {
   if (bytes === 0) {
     return '0 B'
   }
-  let k = 1000,
+  const k = 1000,
     dm = 3,
     sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
     i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -33,39 +33,35 @@ const calculateFileSize = (bytes: number) => {
 }
 
 const Admin: NextPage<Props> = (props) => {
-  console.log(props.colleges)
   //states
-  const [_progressState, setProgressState] = useState(0)
+  // const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
 
   //refs
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = async (_e: any) => {
+  const upload = async () => {
     for (const file of files) {
       const xhr = new XMLHttpRequest()
       const formData = new FormData()
 
       formData.append('file', file.file)
 
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded * 100) / event.total)
-          setProgressState(progress)
-        }
-      })
+      // xhr.upload.addEventListener('progress', (event) => {
+      //   if (event.lengthComputable) {
+      //     const progress = Math.round((event.loaded * 100) / event.total)
+      //     setProgressState(progress)
+      //   }
+      // })
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-          setProgressState(0)
+          // setProgressState(0)
 
           if (xhr.status >= 200 && xhr.status < 300) {
-            console.log('done')
             setFiles((prev) => {
               return prev.filter((f) => f !== file)
             })
-          } else {
-            console.log('error')
           }
         }
       }
@@ -85,8 +81,8 @@ const Admin: NextPage<Props> = (props) => {
   }
 
   const handleAddFile = (event: any) => {
-    let fileArray: UploadItem[] = []
-    for (let file of event.target.files) {
+    const fileArray: UploadItem[] = []
+    for (const file of event.target.files) {
       fileArray.push({
         file,
         name: file.name,
@@ -102,7 +98,6 @@ const Admin: NextPage<Props> = (props) => {
   const nameChangeHandler = (name: string, index: number) => {
     setFiles((prev) => {
       const extention = prev[index].name.split('.').pop()
-      console.log(`${name}.${extention}`)
       return [
         ...prev.slice(0, index),
         { ...prev[index], name: `${name}.${extention}` },
@@ -148,8 +143,6 @@ const Admin: NextPage<Props> = (props) => {
       ]
     })
   }
-
-  console.log(files)
 
   return (
     <div>
@@ -241,7 +234,7 @@ const Admin: NextPage<Props> = (props) => {
                             ))}
                         </select>
                       ))}
-                      <button onClick={(e) => addCourseHandler(idx)}>
+                      <button onClick={() => addCourseHandler(idx)}>
                         Add Course
                       </button>
                       <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
