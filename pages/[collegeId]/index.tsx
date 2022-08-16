@@ -17,11 +17,6 @@ type Props = {
 }
 
 const Index: NextPage<Props> = (props: Props) => {
-  console.log(
-    props.branches.forEach((branch) => {
-      console.log(branch.name)
-    })
-  )
   const branchButtons = props.branches.map((branch, idx) => {
     return (
       <div key={idx}>
@@ -69,7 +64,6 @@ export default Index
 
 export const getStaticPaths = async () => {
   const colleges = await prisma.college.findMany()
-  console.log(colleges)
   const paths = colleges.map((college) => {
     return {
       params: { collegeId: college.name.toLowerCase() },

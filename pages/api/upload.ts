@@ -26,7 +26,7 @@ export default async function handler(
 ) {
   const form = new formidable.IncomingForm()
 
-  return new Promise((_, __) => {
+  return new Promise(() => {
     form.parse(req, async (_err, fields, files): Promise<any> => {
       if (!files.file) return res.status(400).send('No file uploaded')
 
@@ -66,10 +66,7 @@ export default async function handler(
             resourceIds: { push: dbResourse.id },
           },
         })
-
-        console.log(resourceURL)
       } catch (e) {
-        console.log(e)
         res.status(500).send('Error uploading file')
       }
     })

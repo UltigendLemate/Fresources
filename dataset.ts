@@ -18,7 +18,6 @@ export const subjectsArray = [
   'subject-6',
 ]
 
-
 export const branch = [
   'COE',
   'IT',
@@ -31,11 +30,7 @@ export const branch = [
   'PIE',
   'BT',
   'CE',
-  'ENE'
+  'ENE',
 ]
 
-export const year = [
-  '1st year', 
-  '2nd year',
-  '3rd year'
-]
+export const year = ['1st year', '2nd year', '3rd year']
