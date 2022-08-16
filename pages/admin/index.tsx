@@ -277,7 +277,7 @@ const Admin: NextPage<Props> = (props) => {
 
 export default Admin
 
-export const getStaticProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const colleges = await prisma.college.findMany({
     include: { branches: { include: { courses: true } } },
   })
