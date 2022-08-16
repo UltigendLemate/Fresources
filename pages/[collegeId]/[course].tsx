@@ -1,9 +1,10 @@
+/* eslint-disable no-console */
 /* eslint-disable @next/next/no-img-element */
 import { Course, Resource } from '@prisma/client'
 import Dropdown from 'components/utility/Dropdown'
 import Layout from 'components/utility/Layout'
 import { ParsedUrlQuery } from 'querystring'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { prisma } from '~/prisma'
 import { topicsJSON } from '../../dataset'
 // import './styles.css';
@@ -15,26 +16,26 @@ interface IParams extends ParsedUrlQuery {
 type Data = (Course & { resources: Resource[] })[]
 
 function Index({ data }: { data: Data }) {
-  const [resourceData, setResourceData] = useState<{
-    [key: string]: Resource[]
-  }>({})
-  useEffect(() => {
-    if (!Object.keys(resourceData).length) {
-      data.forEach((course) => {
-        course.resources.forEach((resource) => {
-          setResourceData((prev: any) => {
-            return {
-              ...prev,
-              [resource.type]: new Set([
-                ...(prev[resource.type] || []),
-                resource,
-              ]),
-            }
-          })
-        })
-      })
+  const resourceData: { [key: string]: Set<Resource> } = useMemo(() => {
+    return {
+      Book: new Set(),
+      Assignment: new Set(),
+      Note: new Set(),
+      Project: new Set(),
+      Paper: new Set(),
+      Playlist: new Set(),
     }
+  }, [])
+
+  useEffect(() => {
+    data.forEach((course) => {
+      course.resources.forEach((resource) => {
+        resourceData[resource.type].add(resource)
+      })
+    })
+    console.log(resourceData)
   }, [data, resourceData])
+
   const [isActive, setIsActive] = useState('Notes')
 
   const buttons = Object.keys(topicsJSON).map((subject, index) => {
@@ -81,10 +82,12 @@ export default Index
 
 export const getServerSideProps = async (context: any) => {
   const { course } = context.params as IParams
+
   const data = await prisma.course.findMany({
     where: { description: course },
     include: { resources: true },
   })
+
   return {
     props: { data },
   }
