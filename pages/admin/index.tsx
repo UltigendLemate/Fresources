@@ -1,104 +1,103 @@
-import type { NextPage } from 'next'
+import { Branch, College, Course } from '@prisma/client'
+import type { GetServerSideProps, NextPage } from 'next'
 import { useRef, useState } from 'react'
+import { prisma } from '~/prisma'
 
 interface UploadItem {
   name: string
-  college: string
-  course: string
+  collegeId: string
+  courseIds: string[]
   file: File
 }
 
-const COLLEGE_LIST: { college: string; courses: string[] }[] = [
-  {
-    college: 'DTU',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'NSUT',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'IGDTUW',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-  {
-    college: 'IIIT',
-    courses: ['AC102', 'AC103', 'AC104', 'EE101', 'EE102', 'EE103'],
-  },
-]
+export type Metadata = Omit<UploadItem, 'file'>
 
-const Admin: NextPage = () => {
+type Props = {
+  colleges: (College & {
+    branches: (Branch & {
+      courses: Course[]
+    })[]
+  })[]
+}
+
+const calculateFileSize = (bytes: number) => {
+  if (bytes === 0) {
+    return '0 B'
+  }
+  const k = 1000,
+    dm = 3,
+    sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+    i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
+
+const Admin: NextPage<Props> = (props) => {
   //states
-  const [_progressState, setProgressState] = useState(0)
+  // const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
 
   //refs
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = async (e: any) => {
-    for (let file of files) {
-      let xhr = new XMLHttpRequest()
-      let formData = new FormData()
+  const upload = async () => {
+    for (const file of files) {
+      const xhr = new XMLHttpRequest()
+      const formData = new FormData()
 
-      formData.append(
-        'demo',
-        file.file,
-        `${file.college}/${file.course}/${file.name}`
-      )
+      formData.append('file', file.file)
 
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded * 100) / event.total)
-          setProgressState(progress)
-        }
-      })
+      // xhr.upload.addEventListener('progress', (event) => {
+      //   if (event.lengthComputable) {
+      //     const progress = Math.round((event.loaded * 100) / event.total)
+      //     setProgressState(progress)
+      //   }
+      // })
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-          setProgressState(0)
+          // setProgressState(0)
 
           if (xhr.status >= 200 && xhr.status < 300) {
-            console.log('done')
             setFiles((prev) => {
               return prev.filter((f) => f !== file)
             })
-          } else {
-            console.log('error')
           }
         }
       }
       xhr.open('POST', '/api/upload', true)
-      // xhr.withCredentials = props.withCredentials
+
+      formData.append(
+        'metadata',
+        JSON.stringify({
+          collegeId: file.collegeId,
+          courseIds: [...new Set(file.courseIds)],
+          name: file.name,
+        } as Metadata)
+      )
+
       xhr.send(formData)
     }
   }
 
   const handleAddFile = (event: any) => {
-    let fileArray: UploadItem[] = []
-    for (let file of event.target.files) {
-      fileArray.push({ file, name: file.name, college: 'DTU', course: 'AC102' })
+    const fileArray: UploadItem[] = []
+    for (const file of event.target.files) {
+      fileArray.push({
+        file,
+        name: file.name,
+        collegeId: props.colleges[0].id,
+        courseIds: [props.colleges[0].branches[0].courses[0].id],
+      })
     }
     setFiles((prev) => {
       return [...prev, ...fileArray]
     })
   }
 
-  const calculateFileSize = (bytes: number) => {
-    if (bytes === 0) {
-      return '0 B'
-    }
-    let k = 1000,
-      dm = 3,
-      sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-      i = Math.floor(Math.log(bytes) / Math.log(k))
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
-  }
-
   const nameChangeHandler = (name: string, index: number) => {
     setFiles((prev) => {
       const extention = prev[index].name.split('.').pop()
-      console.log(`${name}.${extention}`)
       return [
         ...prev.slice(0, index),
         { ...prev[index], name: `${name}.${extention}` },
@@ -117,7 +116,33 @@ const Admin: NextPage = () => {
     })
   }
 
-  console.log(files)
+  const courseChangeHandler = (
+    courseId: string,
+    courseIdIndex: number,
+    index: number
+  ) => {
+    setFiles((prev) => {
+      const newCourseIds = [...prev[index].courseIds]
+      newCourseIds[courseIdIndex] = courseId
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], courseIds: newCourseIds },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  const addCourseHandler = (index: number) => {
+    setFiles((prev) => {
+      const newCourseIds = [...prev[index].courseIds]
+      newCourseIds.push(props.colleges[0].branches[0].courses[0].id)
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], courseIds: newCourseIds },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
 
   return (
     <div>
@@ -128,7 +153,8 @@ const Admin: NextPage = () => {
         ref={input_ref}
         className='hidden'
       />
-      {/* <div className='text-2xl'>{progressState}</div> */}
+
+      {/* <div className='text-2xl'>{_progressState}</div> */}
 
       <div className='px-4 py-4'>
         <div id='options' className='flex gap-4'>
@@ -175,34 +201,42 @@ const Admin: NextPage = () => {
                           collegeChangeHandler(e.target?.value, idx)
                         }}
                       >
-                        {COLLEGE_LIST.map((college) => {
+                        {props.colleges.map(({ name, id }) => {
                           return (
-                            <option
-                              key={college.college}
-                              value={college.college}
-                            >
-                              {college.college}
+                            <option key={name} value={id}>
+                              {name}
                             </option>
                           )
                         })}
                       </select>
-                      {/* <select
-                        className='text-black'
-                        onClick={(e: any) => {
-                          collegeChangeHandler(e.target?.value, idx)
-                        }}
-                      >
-                        {COLLEGE_LIST.map((college) => {
-                          return (
-                            <option
-                              key={college.college}
-                              value={college.college}
-                            >
-                              {college.college}
-                            </option>
-                          )
-                        })}
-                      </select> */}
+                      {file.courseIds.map((_courseId, courseIdIdx) => (
+                        <select
+                          className='text-black'
+                          key={_courseId + courseIdIdx}
+                          onChange={(e) =>
+                            courseChangeHandler(
+                              e.target?.value,
+                              courseIdIdx,
+                              idx
+                            )
+                          }
+                        >
+                          {props.colleges
+                            .find((c) => c.id === file.collegeId)
+                            ?.branches.flatMap((b) => b.courses)
+                            .map((course) => (
+                              <option
+                                key={course.description}
+                                value={course.id}
+                              >
+                                {course.description}
+                              </option>
+                            ))}
+                        </select>
+                      ))}
+                      <button onClick={() => addCourseHandler(idx)}>
+                        Add Course
+                      </button>
                       <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
                         Edit Name
                       </div>
@@ -242,3 +276,12 @@ const Admin: NextPage = () => {
 }
 
 export default Admin
+
+export const getStaticProps: GetServerSideProps<Props> = async () => {
+  const colleges = await prisma.college.findMany({
+    include: { branches: { include: { courses: true } } },
+  })
+  return {
+    props: { colleges },
+  }
+}
