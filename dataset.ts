@@ -54,3 +54,17 @@ export const collegesWithBranchesJSON = {
   IGDTU: ['cloth washing', 'dish washing', 'laundry', 'cooking'],
   IIITD: ['SUICIDE'],
 }
+
+export const firstYearTopics = [
+  'Programming',
+  'Maths-I',
+  'Maths-II',
+  'Mechanical Eng.',
+  'Workshops',
+  'Electrocal Eng.',
+  'Physics-I',
+  'Physics-II',
+  'Chemistry',
+  'FECs',
+  'Engineering Graphics',
+]
