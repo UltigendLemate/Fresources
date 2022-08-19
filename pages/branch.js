@@ -3,7 +3,6 @@ import Layout from 'components/utility/Layout'
 import { year } from 'dataset'
 import { useState } from 'react'
 
-
 function Branch() {
   const yearArray = year
   const [isActive, setIsActive] = useState('1st Year')
@@ -13,8 +12,9 @@ function Branch() {
       <div key={index}>
         <button
           onClick={() => setIsActive(year)}
-          className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${isActive === year ? 'glass bg-[#ffffff17]' : ''
-            }`}
+          className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${
+            isActive === year ? 'glass bg-[#ffffff17]' : ''
+          }`}
         >
           {year}
         </button>
