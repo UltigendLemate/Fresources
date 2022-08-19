@@ -27,7 +27,7 @@ const Dropdown = (props: Props) => {
           return (
             <div
               key={index}
-              className='text-white p-4 text-xl'
+              className='text-white p-4 text-xl cursor-pointer hover:bg-gray-600 transition-all'
               onClick={() => {
                 props.setIsActive(subject)
                 setOpenDropdown(false)

@@ -25,6 +25,6 @@
     "**/*.tsx",
     "prisma/script.ts",
     "pages/Subject/index.jsx"
-  ],
+, "pages/[college].js"  ],
   "exclude": ["node_modules"]
 }

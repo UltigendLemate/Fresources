@@ -1,5 +1,6 @@
 import Layout from 'components/utility/Layout'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import Button from '../components/utility/Button'
 import GlassSearch from '../components/utility/GlassSearch'
 import { colleges } from '../dataset'
@@ -7,11 +8,15 @@ import { colleges } from '../dataset'
 const Home: NextPage = () => {
   const collegeButtons = colleges.map((college) => {
     return (
-      <Button.Glass
-        value={college}
-        key={college}
-        href={`/${college.toLowerCase()}`}
-      />
+      <Link href={`/${college.toLocaleLowerCase()}`} key={college}>
+        <div>
+          <Button.Glass
+            value={college}
+            key={college}
+            href={`/${college.toLowerCase()}`}
+          />
+        </div>
+      </Link>
     )
   })
   return (
