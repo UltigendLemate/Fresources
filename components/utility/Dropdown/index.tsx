@@ -12,7 +12,7 @@ const Dropdown = (props: Props) => {
   return (
     <div>
       <div
-        className={`search-glass flex items-center justify-between text-white p-4 text-xl ${
+        className={`search-glass flex items-center justify-between transition-all text-white p-4 text-xl ${
           openDropdown ? 'rounded-t-lg' : 'rounded-lg'
         }`}
         onClick={() => setOpenDropdown(!openDropdown)}
@@ -27,7 +27,7 @@ const Dropdown = (props: Props) => {
           return (
             <div
               key={index}
-              className='text-white p-4 text-xl'
+              className='text-white p-4 text-xl cursor-pointer hover:bg-gray-600 transition-all'
               onClick={() => {
                 props.setIsActive(subject)
                 setOpenDropdown(false)

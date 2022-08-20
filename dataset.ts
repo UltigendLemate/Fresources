@@ -33,4 +33,38 @@ export const branch = [
   'ENE',
 ]
 
-export const year = ['1st year', '2nd year', '3rd year']
+export const year = ['1st Year', '2nd Year']
+
+export const collegesWithBranchesJSON = {
+  DTU: [
+    'COE',
+    'IT',
+    'SE',
+    'EP',
+    'EE',
+    'MCE',
+    'ECE',
+    'ME',
+    'PIE',
+    'BT',
+    'CE',
+    'ENE',
+  ],
+  NSUT: ['CSAI', 'CSDS', 'IT', 'ITNS', 'MAC', 'EIOT', 'ECE', 'ICE', 'BT'],
+  IGDTU: ['cloth washing', 'dish washing', 'laundry', 'cooking'],
+  IIITD: ['SUICIDE'],
+}
+
+export const firstYearTopics = [
+  'Programming',
+  'Maths-I',
+  'Maths-II',
+  'Mech Eng.',
+  'Workshops',
+  'Elec Eng.',
+  'Physics-I',
+  'Physics-II',
+  'Chemistry',
+  'FECs',
+  'EG',
+]

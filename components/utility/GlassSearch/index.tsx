@@ -29,7 +29,8 @@ const GlassSearch = () => {
           <input
             type='search'
             id='default-search'
-            className='h-16 w-full rounded-lg font-semibold text-lg md:font-bold md:text-2xl bg-transparent pl-20 pr-4 border-transparent focus:border-blue-500 border-2 focus:outline-none'
+            className='text-white h-16 w-full rounded-lg font-semibold text-lg md:font-bold md:text-2xl bg-transparent pl-20 pr-4 border-transparent focus:border-[#f5a607]
+            border-2 focus:outline-none'
             placeholder='Search for a topic'
           />
         </div>
@@ -39,3 +40,5 @@ const GlassSearch = () => {
 }
 
 export default GlassSearch
+// border-[#f5a607]
+// border-blue-500
