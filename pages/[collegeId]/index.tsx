@@ -1,9 +1,11 @@
 import { Branch } from '@prisma/client'
+import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
+import { firstYearTopics, year } from 'dataset'
 import type { GetStaticProps, NextPage } from 'next'
-import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
+import { useState } from 'react'
 import { prisma } from '~/prisma'
 import Button from '../../components/utility/Button'
 
@@ -17,48 +19,83 @@ type Props = {
 }
 
 const Index: NextPage<Props> = (props: Props) => {
+  const [isActive, setIsActive] = useState('2nd Year')
+
+  const yearButtons = year.map((year, index) => {
+    if (index === 0) {
+      return (
+        <div key={index}>
+          <button
+            onClick={() => setIsActive(year)}
+            className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${
+              isActive === year ? 'glass bg-[#ffffff17]' : ''
+            }`}
+          >
+            {year}
+          </button>
+        </div>
+      )
+    } else {
+      return (
+        <div key={index}>
+          <button
+            onClick={() => setIsActive(year)}
+            className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${
+              isActive === year ? 'glass bg-[#ffffff17]' : ''
+            }`}
+          >
+            {year}
+          </button>
+        </div>
+      )
+    }
+  })
+
+  const firstYearButtons = firstYearTopics.map((topic, idx) => {
+    return (
+      <div key={idx}>
+        <Button.Glass value={topic} key={topic} />
+      </div>
+    )
+  })
+
   const branchButtons = props.branches.map((branch, idx) => {
     return (
       <div key={idx}>
-        <Button.Glass
-          value={branch.name}
-          key={branch.id}
-          css='bg-[#ff000052]'
-        />
-        <div>
-          <Link href='/'>
-            <a>
-              <Button.Glass value='1st year' />
-            </a>
-          </Link>
-          <Link href='/'>
-            <a>
-              <Button.Glass value='2st year' />
-            </a>
-          </Link>
-          <Link href='/'>
-            <a>
-              <Button.Glass value='3st year' />
-            </a>
-          </Link>
-        </div>
+        <Button.Glass value={branch.name} key={branch.id} />
       </div>
     )
   })
 
   return (
-    <Layout className='w-screen pt-8 items-center overflow-x-hidden'>
-      <div className='w-full lg:w-2/3 flex flex-col items-center gap-10 sm:gap-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+    <Layout className='w-screen overflow-x-hidden'>
+      <div
+        className={
+          isActive == '1st Year' ? 'first-year-layout' : 'second-year-layout'
+        }
+      >
         <GlassSearch />
-        <div className='text-5xl md:text-8xl font-bold'>
-          <h1 className='text-white fresources'>
-            {props.college.toUpperCase()}
-          </h1>
+        <div className='mx-auto text-center hidden md:block'>
+          <div className='text-5xl md:text-7xl font-bold'>
+            <h1 className='text-white fresources'>
+              {props.college.toUpperCase()}
+            </h1>
+          </div>
+          <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
+            {yearButtons}
+          </div>
+        </div>
+        <div className='w-full md:hidden'>
+          <Dropdown
+            isActive={isActive}
+            setIsActive={setIsActive}
+            options={year}
+          />
         </div>
 
         <div>
-          <div className='w-3/4 md:w-full md:p-8 grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-10 text-center text-white'>
-            {branchButtons}
+          <div className='w-screen px-4 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:w-screen md:w-screen md:p-8 md:grid-cols-4 md:gap-10 lg:w-full text-center text-white overflow-x-hidden'>
+            {isActive === '1st Year' ? firstYearButtons : branchButtons}
           </div>
         </div>
       </div>
