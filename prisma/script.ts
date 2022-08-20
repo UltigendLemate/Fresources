@@ -56,17 +56,64 @@ async function main() {
     },
   })
 
-  prisma.branch.createMany
-
-  const allCollages = await prisma.college.findMany()
+  await prisma.college.create({
+    data: {
+      name: 'DTU',
+      branches: {
+        create: [
+          {
+            name: 'BT',
+          },
+          {
+            name: 'CE',
+          },
+          {
+            name: 'CO',
+          },
+          {
+            name: 'EE',
+          },
+          {
+            name: 'EC',
+          },
+          {
+            name: 'EN',
+          },
+          {
+            name: 'EP',
+          },
+          {
+            name: 'IT',
+          },
+          {
+            name: 'ME',
+          },
+          {
+            name: 'AE',
+          },
+          {
+            name: 'MC',
+          },
+          {
+            name: 'PE',
+          },
+          {
+            name: 'CH',
+          },
+          {
+            name: 'SEs',
+          },
+        ],
+      },
+    },
+  })
 }
 
 main()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
-    console.error(e)
+  .catch(async () => {
     await prisma.$disconnect()
     process.exit(1)
   })
