@@ -5,6 +5,7 @@ import Button from 'components/utility/Button'
 import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
+import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useEffect, useState } from 'react'
 import { prisma } from '~/prisma'
@@ -76,16 +77,22 @@ function Index({ data, course }: { data: Data; course: string }) {
           options={Object.keys(resourceState)}
         />
       </div>
-
       <div className='w-full max-w-[1080px] px-4 justify-center mx-auto text-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 my-4'>
         {resourceState[isActive] &&
           [...resourceState[isActive]].map((resource) => {
             return (
-              <Button.Glass
-                value={resource.name}
+              <Link
+                href={{
+                  pathname: '/nsut/Physics/file',
+                  query: { fileId: resource.url },
+                }}
                 key={resource.id}
-                css={'font-medium'}
-              />
+                passHref
+              >
+                <a>
+                  <Button.Glass value={resource.name} css={'font-medium'} />
+                </a>
+              </Link>
             )
           })}
       </div>
