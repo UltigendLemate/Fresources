@@ -8,14 +8,10 @@ import { colleges } from '../dataset'
 const Home: NextPage = () => {
   const collegeButtons = colleges.map((college) => {
     return (
-      <Link href={`/${college.toLocaleLowerCase()}`} key={college}>
-        <div>
-          <Button.Glass
-            value={college}
-            key={college}
-            href={`/${college.toLowerCase()}`}
-          />
-        </div>
+      <Link href={`/${college.toLowerCase()}`} key={college} passHref>
+        <a>
+          <Button.Glass value={college} />
+        </a>
       </Link>
     )
   })

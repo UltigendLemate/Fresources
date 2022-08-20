@@ -59,7 +59,6 @@ async function main() {
   prisma.branch.createMany
 
   const allCollages = await prisma.college.findMany()
-  console.log(allCollages)
 }
 
 main()
