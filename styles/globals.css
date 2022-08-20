@@ -47,7 +47,7 @@
 }
 
 .first-year-layout {
-  @apply w-full md:w-2/3 lg:w-2/3 flex flex-col items-center gap-10 absolute top-2/3 md:top-2/4 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 overflow-x-hidden;
+  @apply w-full md:w-2/3 lg:w-2/3 flex flex-col items-center gap-10 absolute top-64 md:top-2/4 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 overflow-x-hidden;
 }
 
 .fresources {

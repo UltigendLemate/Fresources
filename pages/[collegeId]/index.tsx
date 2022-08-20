@@ -51,17 +51,18 @@ const Index: NextPage<Props> = (props: Props) => {
     }
   })
 
-  const branchButtons = props.branches.map((branch, idx) => {
-    return (
-      <div key={idx}>
-        <Button.Glass value={branch.name} key={branch.id} />
-      </div>
-    )
-  })
   const firstYearButtons = firstYearTopics.map((topic, idx) => {
     return (
       <div key={idx}>
         <Button.Glass value={topic} key={topic} />
+      </div>
+    )
+  })
+
+  const branchButtons = props.branches.map((branch, idx) => {
+    return (
+      <div key={idx}>
+        <Button.Glass value={branch.name} key={branch.id} />
       </div>
     )
   })
@@ -75,6 +76,11 @@ const Index: NextPage<Props> = (props: Props) => {
       >
         <GlassSearch />
         <div className='mx-auto text-center hidden md:block'>
+          <div className='text-5xl md:text-7xl font-bold'>
+            <h1 className='text-white fresources'>
+              {props.college.toUpperCase()}
+            </h1>
+          </div>
           <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
             {yearButtons}
           </div>
@@ -85,11 +91,6 @@ const Index: NextPage<Props> = (props: Props) => {
             setIsActive={setIsActive}
             options={year}
           />
-        </div>
-        <div className='text-5xl md:text-7xl font-bold'>
-          <h1 className='text-white fresources'>
-            {props.college.toUpperCase()}
-          </h1>
         </div>
 
         <div>
