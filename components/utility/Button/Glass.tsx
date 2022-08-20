@@ -3,7 +3,6 @@ import React from 'react'
 export type GlassPropsType = {
   value: string
   css?: string
-  href?: string
 }
 
 const Glass: React.FC<GlassPropsType> = (
