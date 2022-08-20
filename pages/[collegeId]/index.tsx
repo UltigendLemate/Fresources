@@ -52,52 +52,38 @@ const Index: NextPage<Props> = (props: Props) => {
   })
 
   const firstYearButtons = firstYearTopics.map((topic, idx) => {
-    return (
-      <div key={idx}>
-        <Button.Glass value={topic} key={topic} />
-      </div>
-    )
+    return <Button.Glass value={topic} key={idx} />
   })
 
-  const branchButtons = props.branches.map((branch, idx) => {
-    return (
-      <div key={idx}>
-        <Button.Glass value={branch.name} key={branch.id} />
-      </div>
-    )
+  const branchButtons = props.branches.map((branch) => {
+    return <Button.Glass value={branch.name} key={branch.id} css='w-full' />
   })
 
   return (
-    <Layout className='w-screen overflow-x-hidden'>
-      <div
-        className={
-          isActive == '1st Year' ? 'first-year-layout' : 'second-year-layout'
-        }
-      >
+    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
+      <div className='w-full md:w-2/3 px-4'>
         <GlassSearch />
-        <div className='mx-auto text-center hidden md:block'>
-          <div className='text-5xl md:text-7xl font-bold'>
-            <h1 className='text-white fresources'>
-              {props.college.toUpperCase()}
-            </h1>
-          </div>
-          <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
-            {yearButtons}
-          </div>
+      </div>
+      <div className='mx-auto text-center hidden md:block'>
+        <h1 className='text-white fresources text-5xl md:text-7xl font-bold'>
+          {props.college.toUpperCase()}
+        </h1>
+        <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
+          {yearButtons}
         </div>
-        <div className='w-full md:hidden'>
-          <Dropdown
-            isActive={isActive}
-            setIsActive={setIsActive}
-            options={year}
-          />
-        </div>
-
-        <div>
-          <div className='w-screen px-4 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:w-screen md:w-screen md:p-8 md:grid-cols-4 md:gap-10 lg:w-full text-center text-white overflow-x-hidden'>
-            {isActive === '1st Year' ? firstYearButtons : branchButtons}
-          </div>
-        </div>
+      </div>
+      <h1 className='text-white fresources text-5xl md:text-7xl font-bold'>
+        {props.college.toUpperCase()}
+      </h1>
+      <div className='w-full md:hidden px-4'>
+        <Dropdown
+          isActive={isActive}
+          setIsActive={setIsActive}
+          options={year}
+        />
+      </div>
+      <div className='w-screen px-4 grid grid-cols-2 gap-6 sm:grid-cols-2 md:p-8 md:grid-cols-4 md:gap-10 lg:w-full text-center text-white overflow-x-hidden'>
+        {isActive === '1st Year' ? firstYearButtons : branchButtons}
       </div>
     </Layout>
   )
