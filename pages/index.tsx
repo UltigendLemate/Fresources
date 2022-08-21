@@ -1,3 +1,4 @@
+import Footer from 'components/utility/Footer'
 import Layout from 'components/utility/Layout'
 import type { NextPage } from 'next'
 import Link from 'next/link'
@@ -27,6 +28,9 @@ const Home: NextPage = () => {
         <div className='w-3/4 md:w-full md:p-8 grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-10 text-center'>
           {collegeButtons}
         </div>
+      </div>
+      <div className='absolute block bottom-4 w-screen'>
+        <Footer />
       </div>
     </Layout>
   )

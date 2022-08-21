@@ -10,7 +10,7 @@ type Props = {
 const Dropdown = (props: Props) => {
   const [openDropdown, setOpenDropdown] = useState(false)
   return (
-    <div>
+    <div className='relative'>
       <div
         className={`search-glass flex items-center justify-between transition-all text-white p-4 text-xl ${
           openDropdown ? 'rounded-t-lg' : 'rounded-lg'
@@ -18,10 +18,16 @@ const Dropdown = (props: Props) => {
         onClick={() => setOpenDropdown(!openDropdown)}
       >
         <div>{props.isActive}</div>
-        <img src='/down-arrow.png' alt='down-arrow' className='h-[10px]' />
+        <img
+          src='/down-arrow.png'
+          alt='down-arrow'
+          className={`h-[10px] transition-all ${openDropdown && 'rotate-180'}`}
+        />
       </div>
       <div
-        className={`bg-[#ffffff11] rounded-b-lg ${!openDropdown && 'hidden'}`}
+        className={`bg-[#020317a4] rounded-b-lg absolute z-10 w-full transition-all ${
+          !openDropdown && 'hidden'
+        }`}
       >
         {props.options.map((subject, index) => {
           return (
