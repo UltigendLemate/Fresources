@@ -1,3 +1,4 @@
+import Layout from 'components/utility/Layout'
 import PdfViewer from 'components/utility/PdfViewer'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -15,7 +16,9 @@ const Index = () => {
 
   return (
     <div className='lg:w-3/4 h-screen mx-auto overflow-y-scroll md:w-screen '>
-      <PdfViewer link={fileURL} />
+      <Layout>
+        <PdfViewer link={fileURL} />
+      </Layout>
     </div>
   )
 }
