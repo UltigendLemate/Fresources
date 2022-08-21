@@ -106,7 +106,7 @@ export default Index
 
 export const getServerSideProps = async (context: any) => {
   const { course } = context.params as IParams
-  console.log(course)
+
   const data = await prisma.course.findMany({
     where: { description: course },
     include: { resources: true },
