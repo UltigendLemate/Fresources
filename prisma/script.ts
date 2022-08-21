@@ -63,6 +63,14 @@ async function main() {
         create: [
           {
             name: 'BT',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Biology',
+                },
+              ],
+            },
           },
           {
             name: 'CE',

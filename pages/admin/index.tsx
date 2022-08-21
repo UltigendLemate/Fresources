@@ -87,6 +87,7 @@ const Admin: NextPage<Props> = (props) => {
           collegeId: file.collegeId,
           courseIds: [...new Set(file.courseIds)],
           name: file.name,
+          type: file.type,
         } as Metadata)
       )
 
@@ -121,11 +122,11 @@ const Admin: NextPage<Props> = (props) => {
     })
   }
 
-  const collegeChangeHandler = (college: string, index: number) => {
+  const collegeChangeHandler = (collegeId: string, index: number) => {
     setFiles((prev) => {
       return [
         ...prev.slice(0, index),
-        { ...prev[index], college },
+        { ...prev[index], collegeId },
         ...prev.slice(index + 1),
       ]
     })
