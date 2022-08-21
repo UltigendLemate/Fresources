@@ -126,7 +126,14 @@ const Admin: NextPage<Props> = (props) => {
     setFiles((prev) => {
       return [
         ...prev.slice(0, index),
-        { ...prev[index], collegeId },
+        {
+          ...prev[index],
+          collegeId,
+          courseIds: [
+            props.colleges.find((c) => c.id === collegeId)?.branches[0]
+              .courses[0].id!,
+          ],
+        },
         ...prev.slice(index + 1),
       ]
     })
@@ -214,9 +221,9 @@ const Admin: NextPage<Props> = (props) => {
         </div>
         <div className=' flex flex-col gap-2 mt-4 w-full'>
           {files
-            .map((file, idx) => {
+            .map((file, fileIdx) => {
               return (
-                <div key={idx}>
+                <div key={fileIdx}>
                   <div className='py-4 px-4 rounded-lg bg-slate-900 w-full text-white flex justify-between'>
                     <div>
                       {file.name} ({calculateFileSize(file.file.size)})
@@ -225,7 +232,7 @@ const Admin: NextPage<Props> = (props) => {
                       <select
                         className='text-black'
                         onChange={(e) => {
-                          collegeChangeHandler(e.target?.value, idx)
+                          collegeChangeHandler(e.target?.value, fileIdx)
                         }}
                       >
                         {props.colleges.map(({ name, id }) => {
@@ -242,9 +249,9 @@ const Admin: NextPage<Props> = (props) => {
                           key={_courseId + courseIdIdx}
                           onChange={(e) =>
                             courseChangeHandler(
-                              e.target?.value,
+                              e.target.value,
                               courseIdIdx,
-                              idx
+                              fileIdx
                             )
                           }
                         >
@@ -274,7 +281,7 @@ const Admin: NextPage<Props> = (props) => {
                         onChange={(e) =>
                           resourceChangeHandler(
                             e.target?.value as ResourceType,
-                            idx
+                            fileIdx
                           )
                         }
                       >
@@ -296,8 +303,8 @@ const Admin: NextPage<Props> = (props) => {
                         onClick={() => {
                           setFiles((prev) => {
                             return [
-                              ...prev.slice(0, idx),
-                              ...prev.slice(idx + 1),
+                              ...prev.slice(0, fileIdx),
+                              ...prev.slice(fileIdx + 1),
                             ]
                           })
                         }}
@@ -310,7 +317,9 @@ const Admin: NextPage<Props> = (props) => {
                     <input
                       type={'text'}
                       className='border-2 rounded-l-lg px-4'
-                      onChange={(e) => nameChangeHandler(e.target.value, idx)}
+                      onChange={(e) =>
+                        nameChangeHandler(e.target.value, fileIdx)
+                      }
                     />
                     <button className='border-2 px-4 py-2 rounded-r-lg border-l-0 bg-blue-800 text-white'>
                       Submit
