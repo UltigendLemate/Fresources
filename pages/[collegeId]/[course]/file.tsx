@@ -15,7 +15,6 @@ const Index = () => {
   }, [fileURL])
 
   return (
-
     <div className='lg:w-3/4 h-screen mx-auto overflow-y-scroll md:w-screen '>
       <Layout>
         <PdfViewer link={fileURL} />
