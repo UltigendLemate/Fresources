@@ -6,6 +6,7 @@ import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import { useEffect, useState } from 'react'
 import { prisma } from '~/prisma'
@@ -28,6 +29,8 @@ function Index({ data, course }: { data: Data; course: string }) {
     Paper: new Set(),
     Playlist: new Set(),
   })
+
+  const { asPath } = useRouter()
 
   useEffect(() => {
     setResourceState((prev) => {
@@ -85,7 +88,7 @@ function Index({ data, course }: { data: Data; course: string }) {
             return (
               <Link
                 href={{
-                  pathname: '/nsut/Physics/file',
+                  pathname: `${asPath}/file`,
                   query: { fileId: resource.url },
                 }}
                 key={resource.id}
