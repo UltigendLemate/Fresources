@@ -1,4 +1,3 @@
-import Layout from 'components/utility/Layout'
 import PdfViewer from 'components/utility/PdfViewer'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -13,12 +12,13 @@ const Index = () => {
       setFileURL(path as string)
     }
   }, [fileURL])
-
   return (
-    <div className='lg:w-3/4 h-screen mx-auto overflow-y-scroll md:w-screen '>
-      <Layout>
+    <div className='lg:w-3/4 h-screen justify-center flex mx-auto overflow-y-scroll md:w-screen '>
+      {fileURL.endsWith('pdf') ? (
         <PdfViewer link={fileURL} />
-      </Layout>
+      ) : (
+        <iframe src={fileURL} className='h-full' />
+      )}
     </div>
   )
 }

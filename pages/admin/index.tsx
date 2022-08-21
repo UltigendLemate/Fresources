@@ -1,4 +1,4 @@
-import { Branch, College, Course } from '@prisma/client'
+import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
 import { useRef, useState } from 'react'
 import { prisma } from '~/prisma'
@@ -8,9 +8,19 @@ interface UploadItem {
   collegeId: string
   courseIds: string[]
   file: File
+  type: ResourceType
 }
 
 export type Metadata = Omit<UploadItem, 'file'>
+
+const resourceTypes: Array<ResourceType> = [
+  'Book',
+  'Assignment',
+  'Note',
+  'Project',
+  'Paper',
+  'Playlist',
+]
 
 type Props = {
   colleges: (College & {
@@ -18,6 +28,10 @@ type Props = {
       courses: Course[]
     })[]
   })[]
+}
+
+interface CourseWithBranch extends Course {
+  branchName: string
 }
 
 const calculateFileSize = (bytes: number) => {
@@ -88,6 +102,7 @@ const Admin: NextPage<Props> = (props) => {
         name: file.name,
         collegeId: props.colleges[0].id,
         courseIds: [props.colleges[0].branches[0].courses[0].id],
+        type: 'Book',
       })
     }
     setFiles((prev) => {
@@ -132,6 +147,7 @@ const Admin: NextPage<Props> = (props) => {
     })
   }
 
+  // eslint-disable-next-line no-unused-vars
   const addCourseHandler = (index: number) => {
     setFiles((prev) => {
       const newCourseIds = [...prev[index].courseIds]
@@ -139,6 +155,16 @@ const Admin: NextPage<Props> = (props) => {
       return [
         ...prev.slice(0, index),
         { ...prev[index], courseIds: newCourseIds },
+        ...prev.slice(index + 1),
+      ]
+    })
+  }
+
+  const resourceChangeHandler = (type: ResourceType, index: number) => {
+    setFiles((prev) => {
+      return [
+        ...prev.slice(0, index),
+        { ...prev[index], type },
         ...prev.slice(index + 1),
       ]
     })
@@ -197,7 +223,7 @@ const Admin: NextPage<Props> = (props) => {
                     <div className='flex gap-2'>
                       <select
                         className='text-black'
-                        onClick={(e: any) => {
+                        onChange={(e) => {
                           collegeChangeHandler(e.target?.value, idx)
                         }}
                       >
@@ -223,20 +249,44 @@ const Admin: NextPage<Props> = (props) => {
                         >
                           {props.colleges
                             .find((c) => c.id === file.collegeId)
-                            ?.branches.flatMap((b) => b.courses)
+                            ?.branches.map((b) => {
+                              const thing = b.courses as CourseWithBranch[]
+                              thing.forEach((c) => {
+                                c.branchName = b.name
+                              })
+                              return thing
+                            })
+                            .flat()
                             .map((course) => (
                               <option
-                                key={course.description}
+                                key={course.description + course.branchName}
                                 value={course.id}
                               >
-                                {course.description}
+                                {`${course.description} / ${course.branchName}`}
                               </option>
                             ))}
                         </select>
                       ))}
-                      <button onClick={() => addCourseHandler(idx)}>
+
+                      <select
+                        className='text-black'
+                        onChange={(e) =>
+                          resourceChangeHandler(
+                            e.target?.value as ResourceType,
+                            idx
+                          )
+                        }
+                      >
+                        {resourceTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* <button onClick={() => addCourseHandler(idx)}>
                         Add Course
-                      </button>
+                      </button> */}
                       <div className='bg-blue-700 px-3 rounded-lg cursor-pointer'>
                         Edit Name
                       </div>
