@@ -55,7 +55,7 @@ export default async function handler(
           data: {
             url: resourceURL,
             name: metadata.name,
-            type: 'Assignment',
+            type: metadata.type,
             courseIds: metadata.courseIds,
           },
         })
@@ -67,7 +67,9 @@ export default async function handler(
           },
         })
       } catch (e) {
-        res.status(500).send('Error uploading file')
+        // eslint-disable-next-line no-console
+        console.error(e)
+        // res.status(500).send('Error uploading file')
       }
     })
   })

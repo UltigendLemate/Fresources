@@ -12,10 +12,13 @@ const Index = () => {
       setFileURL(path as string)
     }
   }, [fileURL])
-
   return (
-    <div className='lg:w-3/4 h-screen mx-auto overflow-y-scroll md:w-screen '>
-      <PdfViewer link={fileURL} />
+    <div className='lg:w-3/4 h-screen justify-center flex mx-auto overflow-y-scroll md:w-screen '>
+      {fileURL.endsWith('pdf') ? (
+        <PdfViewer link={fileURL} />
+      ) : (
+        <iframe src={fileURL} className='h-full' />
+      )}
     </div>
   )
 }
