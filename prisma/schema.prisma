@@ -48,7 +48,7 @@ model Year {
 model Resource {
   id      String       @id @default(auto()) @map("_id") @db.ObjectId
   type    ResourceType
-  name    String       @unique
+  name    String
   url     String
   upvotes Int          @default(0)
 
