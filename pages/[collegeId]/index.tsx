@@ -4,6 +4,7 @@ import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
 import { firstYearTopics, year } from 'dataset'
 import type { GetStaticProps, NextPage } from 'next'
+import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useState } from 'react'
 import { prisma } from '~/prisma'
@@ -56,7 +57,16 @@ const Index: NextPage<Props> = (props: Props) => {
   })
 
   const branchButtons = props.branches.map((branch) => {
-    return <Button.Glass value={branch.name} key={branch.id} css='w-full' />
+    return (
+      <Link
+        href={`/${props.college.toLowerCase()}/${branch.name.toLowerCase()}`}
+        key={branch.id}
+      >
+        <a>
+          <Button.Glass value={branch.name} key={branch.id} css='w-full' />
+        </a>
+      </Link>
+    )
   })
 
   return (
@@ -72,7 +82,7 @@ const Index: NextPage<Props> = (props: Props) => {
           {yearButtons}
         </div>
       </div>
-      <h1 className='text-white fresources text-5xl md:text-7xl font-bold'>
+      <h1 className='text-white fresources text-5xl md:text-7xl font-bold sm:hidden'>
         {props.college.toUpperCase()}
       </h1>
       <div className='w-full md:hidden px-4'>
@@ -82,7 +92,7 @@ const Index: NextPage<Props> = (props: Props) => {
           options={year}
         />
       </div>
-      <div className='w-screen px-4 grid grid-cols-2 gap-6 sm:grid-cols-2 md:p-8 md:grid-cols-4 md:gap-10 lg:w-full text-center text-white overflow-x-hidden'>
+      <div className='w-screen px-4 grid grid-cols-2 gap-6 sm:grid-cols-2 md:p-8 md:grid-cols-4 md:gap-8 lg:w-full text-center text-white overflow-x-hidden max-w-[1200px]'>
         {isActive === '1st Year' ? firstYearButtons : branchButtons}
       </div>
     </Layout>
