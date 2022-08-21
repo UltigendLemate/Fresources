@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Footer = () => {
   return (
     <div
@@ -31,7 +29,7 @@ const Footer = () => {
           target='_blank'
           href='https://chat.whatsapp.com/DZ5QUqZ66tSIAn9v6wDVfn'
         >
-          <i className='fa-brands fa-whatsapp fa-xl ' />
+          <i className='fa-brands fa-whatsapp fa-xl' />
         </a>
       </div>
     </div>
