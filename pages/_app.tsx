@@ -1,19 +1,17 @@
 import type { AppProps } from 'next/app'
+import Script from 'next/script'
 import '../styles/globals.css'
-import Head from 'next/head'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <main>
-      <Head>
-        <script
-          src='https://kit.fontawesome.com/c49340e03a.js'
-          crossOrigin='anonymous'
-          defer
-        />
-      </Head>
+    <>
+      <Script
+        src='https://kit.fontawesome.com/c49340e03a.js'
+        crossOrigin='anonymous'
+        defer
+      />
       <Component {...pageProps} />
-    </main>
+    </>
   )
 }
 

@@ -38,7 +38,7 @@ const Index = (props: Props) => {
         <a>
           <Button.Glass
             value={Abbreviate(course.description)}
-            css='font-medium'
+            css='sm:font-normal'
           />
         </a>
       </Link>
@@ -50,9 +50,9 @@ const Index = (props: Props) => {
         <div className='w-full md:w-2/3 px-8 mx-auto text-white'>
           <GlassSearch />
         </div>
-        <p className='text-4xl text-center py-8 font-bold text-white'>
+        <h1 className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
           {props.data?.name}
-        </p>
+        </h1>
         <div className='mx-auto text-center block'>
           <div className='w-[60%] mx-auto justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3'>
             {CourseBtns}

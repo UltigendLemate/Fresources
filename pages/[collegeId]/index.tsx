@@ -75,7 +75,7 @@ const Index: NextPage<Props> = (props: Props) => {
         <GlassSearch />
       </div>
       <div className='mx-auto text-center hidden md:block'>
-        <h1 className='text-white fresources text-5xl md:text-7xl font-bold'>
+        <h1 className='text-white fresources text-5xl md:text-7xl font-bold mb-12'>
           {props.college.toUpperCase()}
         </h1>
         <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>

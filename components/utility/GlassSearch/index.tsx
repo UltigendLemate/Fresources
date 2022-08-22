@@ -4,7 +4,7 @@ const GlassSearch = () => {
       <form>
         <label
           htmlFor='default-search'
-          className='mb-2 text-sm font-medium  sr-only '
+          className='mb-2 text-sm font-medium sr-only'
         >
           Search
         </label>

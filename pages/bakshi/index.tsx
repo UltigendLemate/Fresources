@@ -113,10 +113,10 @@ const Admin: NextPage<Props> = (props) => {
 
   const nameChangeHandler = (name: string, index: number) => {
     setFiles((prev) => {
-      const extention = prev[index].name.split('.').pop()
+      const extension = prev[index].name.split('.').pop()
       return [
         ...prev.slice(0, index),
-        { ...prev[index], name: `${name}.${extention}` },
+        { ...prev[index], name: `${name}.${extension}` },
         ...prev.slice(index + 1),
       ]
     })
@@ -129,10 +129,7 @@ const Admin: NextPage<Props> = (props) => {
         {
           ...prev[index],
           collegeId,
-          // courseIds: [
-          //   props.colleges.find((c) => c.id === collegeId)!.branches[0]
-          //     .courses[0].id,
-          // ],
+          courseIds: [coursesWithBranch.get(collegeId)![0].id],
         },
         ...prev.slice(index + 1),
       ]
@@ -154,8 +151,7 @@ const Admin: NextPage<Props> = (props) => {
       ]
     })
   }
-
-  // eslint-disable-next-line no-unused-vars
+  /*
   const addCourseHandler = (index: number) => {
     setFiles((prev) => {
       const newCourseIds = [...prev[index].courseIds]
@@ -167,6 +163,7 @@ const Admin: NextPage<Props> = (props) => {
       ]
     })
   }
+  */
 
   const resourceChangeHandler = (type: ResourceType, index: number) => {
     setFiles((prev) => {
@@ -274,6 +271,7 @@ const Admin: NextPage<Props> = (props) => {
                               fileIdx
                             )
                           }
+                          value={file.courseIds[courseIdIdx]}
                         >
                           {coursesWithBranch
                             .get(file.collegeId)!
