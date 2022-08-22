@@ -1,6 +1,6 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -87,6 +87,7 @@ const Admin: NextPage<Props> = (props) => {
           collegeId: file.collegeId,
           courseIds: [...new Set(file.courseIds)],
           name: file.name,
+          type: file.type,
         } as Metadata)
       )
 
@@ -121,11 +122,18 @@ const Admin: NextPage<Props> = (props) => {
     })
   }
 
-  const collegeChangeHandler = (college: string, index: number) => {
+  const collegeChangeHandler = (collegeId: string, index: number) => {
     setFiles((prev) => {
       return [
         ...prev.slice(0, index),
-        { ...prev[index], college },
+        {
+          ...prev[index],
+          collegeId,
+          // courseIds: [
+          //   props.colleges.find((c) => c.id === collegeId)!.branches[0]
+          //     .courses[0].id,
+          // ],
+        },
         ...prev.slice(index + 1),
       ]
     })
@@ -170,6 +178,25 @@ const Admin: NextPage<Props> = (props) => {
     })
   }
 
+  const coursesWithBranch = useMemo(
+    () =>
+      new Map(
+        props.colleges.map((c) => [
+          c.id,
+          c.branches
+            .map((b) => {
+              const thing = b.courses as CourseWithBranch[]
+              thing.forEach((c) => {
+                c.branchName = b.name
+              })
+              return thing
+            })
+            .flat(),
+        ])
+      ),
+    [props.colleges]
+  )
+
   return (
     <div>
       <input
@@ -213,9 +240,9 @@ const Admin: NextPage<Props> = (props) => {
         </div>
         <div className=' flex flex-col gap-2 mt-4 w-full'>
           {files
-            .map((file, idx) => {
+            .map((file, fileIdx) => {
               return (
-                <div key={idx}>
+                <div key={fileIdx}>
                   <div className='py-4 px-4 rounded-lg bg-slate-900 w-full text-white flex justify-between'>
                     <div>
                       {file.name} ({calculateFileSize(file.file.size)})
@@ -224,42 +251,35 @@ const Admin: NextPage<Props> = (props) => {
                       <select
                         className='text-black'
                         onChange={(e) => {
-                          collegeChangeHandler(e.target?.value, idx)
+                          collegeChangeHandler(e.target?.value, fileIdx)
                         }}
                       >
                         {props.colleges.map(({ name, id }) => {
                           return (
-                            <option key={name} value={id}>
+                            <option key={id} value={id}>
                               {name}
                             </option>
                           )
                         })}
                       </select>
+
                       {file.courseIds.map((_courseId, courseIdIdx) => (
                         <select
                           className='text-black'
                           key={_courseId + courseIdIdx}
                           onChange={(e) =>
                             courseChangeHandler(
-                              e.target?.value,
+                              e.target.value,
                               courseIdIdx,
-                              idx
+                              fileIdx
                             )
                           }
                         >
-                          {props.colleges
-                            .find((c) => c.id === file.collegeId)
-                            ?.branches.map((b) => {
-                              const thing = b.courses as CourseWithBranch[]
-                              thing.forEach((c) => {
-                                c.branchName = b.name
-                              })
-                              return thing
-                            })
-                            .flat()
+                          {coursesWithBranch
+                            .get(file.collegeId)!
                             .map((course) => (
                               <option
-                                key={course.description + course.branchName}
+                                key={course.id + course.branchName}
                                 value={course.id}
                               >
                                 {`${course.description} / ${course.branchName}`}
@@ -273,7 +293,7 @@ const Admin: NextPage<Props> = (props) => {
                         onChange={(e) =>
                           resourceChangeHandler(
                             e.target?.value as ResourceType,
-                            idx
+                            fileIdx
                           )
                         }
                       >
@@ -295,8 +315,8 @@ const Admin: NextPage<Props> = (props) => {
                         onClick={() => {
                           setFiles((prev) => {
                             return [
-                              ...prev.slice(0, idx),
-                              ...prev.slice(idx + 1),
+                              ...prev.slice(0, fileIdx),
+                              ...prev.slice(fileIdx + 1),
                             ]
                           })
                         }}
@@ -309,7 +329,9 @@ const Admin: NextPage<Props> = (props) => {
                     <input
                       type={'text'}
                       className='border-2 rounded-l-lg px-4'
-                      onChange={(e) => nameChangeHandler(e.target.value, idx)}
+                      onChange={(e) =>
+                        nameChangeHandler(e.target.value, fileIdx)
+                      }
                     />
                     <button className='border-2 px-4 py-2 rounded-r-lg border-l-0 bg-blue-800 text-white'>
                       Submit
