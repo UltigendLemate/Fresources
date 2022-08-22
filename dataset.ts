@@ -8,7 +8,7 @@ export const topicsJSON = {
   Experiments: ['exp-1', 'exp-2'],
   Playlist: ['play-1', 'play-2'],
 }
-
+ 
 export const subjectsArray = [
   'Subject-1',
   'Subject-2',
@@ -68,3 +68,47 @@ export const firstYearTopics = [
   'FECs',
   'EG',
 ]
+
+
+export const Founders = [
+  {
+      photo: '',
+      name : 'Dhruv Bakshi',
+      Linkedin: '',
+      description: '',
+  },
+  {
+      photo: '',
+      name : 'Chaitanya Anand',
+      Linkedin: '',
+      description: '',
+  },
+  {
+      photo: '',
+      name : 'Ashish Chotani',
+      Linkedin: '',
+      description: '',
+  },
+  ];
+  
+  export const Developers = [
+  {
+      photo: '',
+      name: '',
+  }
+  ];
+  
+  export const teamLeaders = [
+  {
+      photo: '',
+      name: '',
+      subject: '',
+  }
+  ];
+  
+  export const members = [
+  {
+      photo: '',
+      name: '',
+  }
+  ];
