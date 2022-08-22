@@ -1,6 +1,6 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -129,10 +129,10 @@ const Admin: NextPage<Props> = (props) => {
         {
           ...prev[index],
           collegeId,
-          courseIds: [
-            props.colleges.find((c) => c.id === collegeId)?.branches[0]
-              .courses[0].id!,
-          ],
+          // courseIds: [
+          //   props.colleges.find((c) => c.id === collegeId)!.branches[0]
+          //     .courses[0].id,
+          // ],
         },
         ...prev.slice(index + 1),
       ]
@@ -177,6 +177,25 @@ const Admin: NextPage<Props> = (props) => {
       ]
     })
   }
+
+  const coursesWithBranch = useMemo(
+    () =>
+      new Map(
+        props.colleges.map((c) => [
+          c.id,
+          c.branches
+            .map((b) => {
+              const thing = b.courses as CourseWithBranch[]
+              thing.forEach((c) => {
+                c.branchName = b.name
+              })
+              return thing
+            })
+            .flat(),
+        ])
+      ),
+    [props.colleges]
+  )
 
   return (
     <div>
@@ -237,12 +256,13 @@ const Admin: NextPage<Props> = (props) => {
                       >
                         {props.colleges.map(({ name, id }) => {
                           return (
-                            <option key={name} value={id}>
+                            <option key={id} value={id}>
                               {name}
                             </option>
                           )
                         })}
                       </select>
+
                       {file.courseIds.map((_courseId, courseIdIdx) => (
                         <select
                           className='text-black'
@@ -255,19 +275,11 @@ const Admin: NextPage<Props> = (props) => {
                             )
                           }
                         >
-                          {props.colleges
-                            .find((c) => c.id === file.collegeId)
-                            ?.branches.map((b) => {
-                              const thing = b.courses as CourseWithBranch[]
-                              thing.forEach((c) => {
-                                c.branchName = b.name
-                              })
-                              return thing
-                            })
-                            .flat()
+                          {coursesWithBranch
+                            .get(file.collegeId)!
                             .map((course) => (
                               <option
-                                key={course.description + course.branchName}
+                                key={course.id + course.branchName}
                                 value={course.id}
                               >
                                 {`${course.description} / ${course.branchName}`}

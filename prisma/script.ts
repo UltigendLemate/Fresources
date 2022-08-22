@@ -89,9 +89,20 @@ async function main() {
           },
           {
             name: 'EP',
+            courses: {
+              connect: {
+                description: 'Biology',
+              },
+            },
           },
           {
             name: 'IT',
+            courses: {
+              create: {
+                years: { create: { year: 1 } },
+                description: 'Operating Systems',
+              },
+            },
           },
           {
             name: 'ME',

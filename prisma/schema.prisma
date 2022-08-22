@@ -26,7 +26,7 @@ model Branch {
 
 model Course {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
-  description String
+  description String @unique
 
   branchIds String[] @db.ObjectId
   branches  Branch[] @relation(fields: [branchIds], references: [id])
