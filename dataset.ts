@@ -8,7 +8,7 @@ export const topicsJSON = {
   Experiments: ['exp-1', 'exp-2'],
   Playlist: ['play-1', 'play-2'],
 }
- 
+
 export const subjectsArray = [
   'Subject-1',
   'Subject-2',
@@ -69,46 +69,170 @@ export const firstYearTopics = [
   'EG',
 ]
 
-
 export const Founders = [
   {
-      photo: '',
-      name : 'Dhruv Bakshi',
-      Linkedin: '',
-      description: '',
+    photo: '',
+    name: 'Dhruv Bakshi',
+    Linkedin: '',
+    description: 'Chief Technical Officer',
   },
   {
-      photo: '',
-      name : 'Chaitanya Anand',
-      Linkedin: '',
-      description: '',
+    photo: '',
+    name: 'Chaitanya Anand',
+    Linkedin: '',
+    description: 'Chief Executive Officer',
   },
   {
-      photo: '',
-      name : 'Ashish Chotani',
-      Linkedin: '',
-      description: '',
+    photo: '',
+    name: 'Ashish Chotani',
+    Linkedin: '',
+    description: 'Chief Operation Officer',
   },
-  ];
-  
-  export const Developers = [
+]
+
+export const Developers = [
   {
-      photo: '',
-      name: '',
-  }
-  ];
-  
-  export const teamLeaders = [
+    photo: 'image/random.png',
+    name: 'Divanshu Garg',
+  },
   {
-      photo: '',
-      name: '',
-      subject: '',
-  }
-  ];
-  
-  export const members = [
+    photo: '',
+    name: 'Gitansh Mehta',
+  },
   {
-      photo: '',
-      name: '',
-  }
-  ];
+    photo: '',
+    name: 'Kushagra Lakhwani',
+  },  
+  {
+    photo: '',
+    name: 'Junaid Mallik',
+  },
+  {
+    photo: '',
+    name: 'Vamsi ',
+  },
+]
+
+export const TeamLeaders = [
+  {
+    photo: '',
+    name: 'idontknow',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'random',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'rando',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'chaitanya',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'dhruv kejriwal',
+    subject: '',
+  },
+    {
+    photo: '',
+    name: 'subhrajeet',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'divanshu garg',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'god knows',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'random 2',
+    subject: '',
+  },
+  {
+    photo: '',
+    name: 'random 3 ',
+    subject: '',
+  },
+]
+
+export const Members = [
+  {
+    photo: '',
+    name: 'worker 1 ',
+  },
+    {
+    photo: '',
+    name: 'worker 2 ',
+  },
+  {
+    photo: '',
+    name: 'worker 3 ',
+  },
+    {
+    photo: '',
+    name: 'worker 4 ',
+  },
+    {
+    photo: '',
+    name: 'worker 5 ',
+  },
+    {
+    photo: '',
+    name: 'worker 6 ',
+  },
+  {
+    photo: '',
+    name: 'worker 7 ',
+  },
+  {
+    photo: '',
+    name: 'worker 8 ',
+  },
+  {
+    photo: '',
+    name: 'worker 9 ',
+  },
+  {
+    photo: '',
+    name: 'worker 10 ',
+  },
+  {
+    photo: '',
+    name: 'worker 11 ',
+  },
+  {
+    photo: '',
+    name: 'worker 12 ',
+  },
+  {
+    photo: '',
+    name: 'worker 13 ',
+  },
+  {
+    photo: '',
+    name: 'worker 14 ',
+  },
+  {
+    photo: '',
+    name: 'worker 15 ',
+  },
+    {
+    photo: '',
+    name: 'worker 16 ',
+  },
+  {
+    photo: '',
+    name: 'worker 17 ',
+  },
+]

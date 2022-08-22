@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Button from '../components/utility/Button'
 import GlassSearch from '../components/utility/GlassSearch'
 import { colleges } from '../dataset'
- 
+
 const Home: NextPage = () => {
   const collegeButtons = colleges.map((college) => {
     return (
