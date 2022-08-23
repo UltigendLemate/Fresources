@@ -47,11 +47,9 @@ const calculateFileSize = (bytes: number) => {
 }
 
 const Admin: NextPage<Props> = (props) => {
-  //states
   // const [_progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
 
-  //refs
   const input_ref = useRef<HTMLInputElement>(null)
 
   const upload = async () => {
@@ -151,6 +149,7 @@ const Admin: NextPage<Props> = (props) => {
       ]
     })
   }
+
   /*
   const addCourseHandler = (index: number) => {
     setFiles((prev) => {

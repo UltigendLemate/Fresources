@@ -7,5 +7,6 @@
     "source.fixAll": true,
     "source.organizeImports": true
   },
-  "css.lint.unknownAtRules": "ignore"
+  "css.lint.unknownAtRules": "ignore",
+  "editor.tabSize": 2
 }
