@@ -71,7 +71,7 @@ export const firstYearTopics = [
 
 export const Founders = [
   {
-    photo: '',
+    photo: 'public/image/random.png',
     name: 'Dhruv Bakshi',
     Linkedin: '',
     description: 'Chief Technical Officer',
@@ -102,7 +102,7 @@ export const Developers = [
   {
     photo: '',
     name: 'Kushagra Lakhwani',
-  },  
+  },
   {
     photo: '',
     name: 'Junaid Mallik',
@@ -139,7 +139,7 @@ export const TeamLeaders = [
     name: 'dhruv kejriwal',
     subject: '',
   },
-    {
+  {
     photo: '',
     name: 'subhrajeet',
     subject: '',
@@ -168,10 +168,10 @@ export const TeamLeaders = [
 
 export const Members = [
   {
-    photo: '',
+    photo: '/public/image/random.png',
     name: 'worker 1 ',
   },
-    {
+  {
     photo: '',
     name: 'worker 2 ',
   },
@@ -179,15 +179,15 @@ export const Members = [
     photo: '',
     name: 'worker 3 ',
   },
-    {
+  {
     photo: '',
     name: 'worker 4 ',
   },
-    {
+  {
     photo: '',
     name: 'worker 5 ',
   },
-    {
+  {
     photo: '',
     name: 'worker 6 ',
   },
@@ -227,7 +227,7 @@ export const Members = [
     photo: '',
     name: 'worker 15 ',
   },
-    {
+  {
     photo: '',
     name: 'worker 16 ',
   },
