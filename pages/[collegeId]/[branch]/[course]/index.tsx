@@ -20,6 +20,15 @@ interface IParams extends ParsedUrlQuery {
 
 type Data = Course & { resources: Resource[] }
 
+const ResourceHeading = {
+  Book: 'Books',
+  Assignment: 'Assignments',
+  Note: 'Notes',
+  Project: 'Projects',
+  Paper: 'Papers',
+  Playlist: 'Playlist',
+}
+
 function Index({ data, course }: { data: Data; course: string }) {
   const [resources, filterResources] = useSearch(data.resources, ['name'])
 
@@ -56,14 +65,14 @@ function Index({ data, course }: { data: Data; course: string }) {
               isActive === subject ? 'glass bg-[#ffffff17]' : ''
             }`}
           >
-            {subject}
+            {ResourceHeading[subject]}
           </button>
         </div>
       )
     })
   return (
-    <Layout className='w-screen'>
-      <div className='w-full md:w-2/3 p-8 mx-auto'>
+    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-8 items-center overflow-x-hidden'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
         <GlassSearch filterResults={filterResources} />
       </div>
       <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
@@ -85,7 +94,7 @@ function Index({ data, course }: { data: Data; course: string }) {
           })}
         />
       </div>
-      <div className='w-full max-w-[1080px] px-4 justify-center mx-auto text-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 my-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {resourceState.get(isActive) &&
           resourceState.get(isActive)!.map((resource) => {
             return (
