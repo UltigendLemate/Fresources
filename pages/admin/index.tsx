@@ -68,7 +68,7 @@ const Admin: NextPage<Props> = (props) => {
 
       formData.append('file', file.file)
 
-      xhr.upload.addEventListener('progress', (event) => {
+      xhr.upload.addEventListener('progress',(event) => {
         if (event.lengthComputable) {
           const progress = Math.round((event.loaded * 100) / event.total)
           setProgressState(progress)
@@ -98,7 +98,7 @@ const Admin: NextPage<Props> = (props) => {
         } as Metadata)
       )
 
-      xhr.send(formData)
+      await xhr.send(formData)
     }
   }
 

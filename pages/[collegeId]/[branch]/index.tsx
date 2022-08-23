@@ -43,7 +43,7 @@ const Index: NextPage<Props> = (props) => {
         <a>
           <Button.Glass
             value={Abbreviate(course.description)}
-            css='sm:font-normal text-xl'
+            css='sm:font-medium text-xl'
           />
         </a>
       </Link>

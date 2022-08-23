@@ -58,7 +58,7 @@ function Index({ data, course }: { data: Data; course: string }) {
     })
     .map((subject, index) => {
       return (
-        <div key={index + subject}>
+        <div key={index + subject} >
           <button
             onClick={() => setIsActive(subject)}
             className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${
@@ -109,7 +109,8 @@ function Index({ data, course }: { data: Data; course: string }) {
                 <a>
                   <Button.Glass
                     value={resource.name.split('.').slice(0, -1).join('.')}
-                    css={'sm:font-normal text-xl'}
+                    css={'sm:font-medium text-xl'}
+                    
                   />
                 </a>
               </Link>
