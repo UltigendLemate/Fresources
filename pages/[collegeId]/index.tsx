@@ -83,7 +83,7 @@ const Index: NextPage<Props> = (props) => {
   })
 
   return (
-    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
+    <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
       <div className='w-full md:w-4/5 lg:2/3 px-8'>
         <GlassSearch filterResults={filterBranches} />
       </div>
@@ -100,7 +100,7 @@ const Index: NextPage<Props> = (props) => {
           options={year}
         />
       </div>
-      <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8  justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {isActive === '1st Year' ? firstYearButtons : branchButtons}
       </div>
     </Layout>
