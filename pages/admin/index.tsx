@@ -47,8 +47,17 @@ const calculateFileSize = (bytes: number) => {
 }
 
 const Admin: NextPage<Props> = (props) => {
-  // const [_progressState, setProgressState] = useState(0)
+  const [progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
+  const [defaultSelections, setDefaultSelections] = useState<{
+    collegeId: string
+    courseId: string
+    type: ResourceType
+  }>({
+    collegeId: '',
+    courseId: '',
+    type: 'Book',
+  })
 
   const input_ref = useRef<HTMLInputElement>(null)
 
@@ -59,16 +68,16 @@ const Admin: NextPage<Props> = (props) => {
 
       formData.append('file', file.file)
 
-      // xhr.upload.addEventListener('progress', (event) => {
-      //   if (event.lengthComputable) {
-      //     const progress = Math.round((event.loaded * 100) / event.total)
-      //     setProgressState(progress)
-      //   }
-      // })
+      xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded * 100) / event.total)
+          setProgressState(progress)
+        }
+      })
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
-          // setProgressState(0)
+          setProgressState(0)
 
           if (xhr.status >= 200 && xhr.status < 300) {
             setFiles((prev) => {
@@ -99,9 +108,15 @@ const Admin: NextPage<Props> = (props) => {
       fileArray.push({
         file,
         name: file.name,
-        collegeId: props.colleges[0].id,
-        courseIds: [props.colleges[0].branches[0].courses[0].id],
-        type: 'Book',
+        collegeId: defaultSelections.collegeId
+          ? defaultSelections.collegeId
+          : props.colleges[0].id,
+        courseIds: [
+          defaultSelections.courseId
+            ? defaultSelections.courseId
+            : props.colleges[0].branches[0].courses[0].id,
+        ],
+        type: defaultSelections.type ? defaultSelections.type : 'Book',
       })
     }
     setFiles((prev) => {
@@ -202,8 +217,73 @@ const Admin: NextPage<Props> = (props) => {
         ref={input_ref}
         className='hidden'
       />
+      <div className='p-4'>
+        <h1 className='text-2xl font-extrabold mb-3'>Set Default Selectors</h1>
+        <div className='flex gap-4'>
+          <select
+            className='text-black border-2 rounded-lg px-4 py-2'
+            onChange={(e) => {
+              setDefaultSelections({
+                ...defaultSelections,
+                courseId: '',
+                collegeId: e.target.value,
+              })
+            }}
+          >
+            <option value=''>Select College</option>
+            {props.colleges.map(({ name, id }) => {
+              return (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              )
+            })}
+          </select>
+          {defaultSelections.collegeId && (
+            <select
+              className='text-black border-2 rounded-lg px-4 py-2'
+              onChange={(e) => {
+                setDefaultSelections({
+                  ...defaultSelections,
+                  courseId: e.target.value,
+                })
+              }}
+            >
+              <option value=''>Select Course</option>
+              {coursesWithBranch
+                .get(defaultSelections.collegeId)!
+                .map((course) => {
+                  return (
+                    <option
+                      key={course.id + course.branchName}
+                      value={course.id}
+                    >
+                      {`${course.description} / ${course.branchName}`}
+                    </option>
+                  )
+                })}
+            </select>
+          )}
+          <select
+            className='text-black border-2 rounded-lg px-4 py-2'
+            onChange={(e) => {
+              setDefaultSelections({
+                ...defaultSelections,
+                type: e.target.value as ResourceType,
+              })
+            }}
+          >
+            <option>Select Resource Type</option>
+            {resourceTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
-      {/* <div className='text-2xl'>{_progressState}</div> */}
+      <div className='text-2xl'>{progressState}</div>
 
       <div className='px-4 py-4'>
         <div id='options' className='flex gap-4'>
@@ -249,6 +329,7 @@ const Admin: NextPage<Props> = (props) => {
                         onChange={(e) => {
                           collegeChangeHandler(e.target?.value, fileIdx)
                         }}
+                        value={file.collegeId}
                       >
                         {props.colleges.map(({ name, id }) => {
                           return (
@@ -293,6 +374,7 @@ const Admin: NextPage<Props> = (props) => {
                             fileIdx
                           )
                         }
+                        value={file.type}
                       >
                         {resourceTypes.map((type) => (
                           <option key={type} value={type}>
@@ -308,7 +390,7 @@ const Admin: NextPage<Props> = (props) => {
                         Edit Name
                       </div>
                       <div
-                        className='bg-red-700 px-3 rounded-lg cursor-pointer'
+                        className='bg-red-700 px-3 rounded-lg cursor-pointer grid place-items-center'
                         onClick={() => {
                           setFiles((prev) => {
                             return [
@@ -325,14 +407,12 @@ const Admin: NextPage<Props> = (props) => {
                   <div className='flex'>
                     <input
                       type={'text'}
-                      className='border-2 rounded-l-lg px-4'
+                      className='border-2 rounded-lg px-4 w-1/2 py-2 mt-1 '
                       onChange={(e) =>
                         nameChangeHandler(e.target.value, fileIdx)
                       }
+                      placeholder='Type here to change the file name'
                     />
-                    <button className='border-2 px-4 py-2 rounded-r-lg border-l-0 bg-blue-800 text-white'>
-                      Submit
-                    </button>
                   </div>
                 </div>
               )

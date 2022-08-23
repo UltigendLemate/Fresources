@@ -54,7 +54,13 @@ const Index: NextPage<Props> = (props) => {
   })
 
   const firstYearButtons = firstYearTopics.map((topic, idx) => {
-    return <Button.Glass value={topic} key={idx} />
+    return (
+      <Button.Glass
+        value={topic}
+        key={idx}
+        css={'sm:font-normal text-xl px-1'}
+      />
+    )
   })
 
   const [branches, filterBranches] = useSearch(props.branches, ['name'])
@@ -66,7 +72,11 @@ const Index: NextPage<Props> = (props) => {
         key={branch.id}
       >
         <a>
-          <Button.Glass value={branch.name} key={branch.id} css='w-full' />
+          <Button.Glass
+            value={branch.name}
+            key={branch.id}
+            css='w-full sm:font-normal text-xl'
+          />
         </a>
       </Link>
     )
@@ -74,20 +84,15 @@ const Index: NextPage<Props> = (props) => {
 
   return (
     <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
-      <div className='w-full md:w-2/3 px-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8'>
         <GlassSearch filterResults={filterBranches} />
       </div>
-      <div className='mx-auto text-center hidden md:block'>
-        <h1 className='text-white fresources text-5xl md:text-7xl font-bold mb-12'>
-          {props.college.toUpperCase()}
-        </h1>
-        <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
-          {yearButtons}
-        </div>
-      </div>
-      <h1 className='text-white fresources text-5xl md:text-7xl font-bold sm:hidden'>
+      <h1 className='text-6xl text-center mt-8 mb-8 font-bold text-white fresources'>
         {props.college.toUpperCase()}
       </h1>
+      <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
+        {yearButtons}
+      </div>
       <div className='w-full md:hidden px-4'>
         <Dropdown
           isActive={isActive}
@@ -95,7 +100,7 @@ const Index: NextPage<Props> = (props) => {
           options={year}
         />
       </div>
-      <div className='w-screen px-4 grid grid-cols-2 gap-6 sm:grid-cols-2 md:p-8 md:grid-cols-4 md:gap-8 lg:w-full text-center text-white overflow-x-hidden max-w-[1200px]'>
+      <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {isActive === '1st Year' ? firstYearButtons : branchButtons}
       </div>
     </Layout>

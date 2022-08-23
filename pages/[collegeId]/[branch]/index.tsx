@@ -43,7 +43,7 @@ const Index: NextPage<Props> = (props) => {
         <a>
           <Button.Glass
             value={Abbreviate(course.description)}
-            css='sm:font-normal'
+            css='sm:font-normal text-xl'
           />
         </a>
       </Link>
@@ -51,21 +51,17 @@ const Index: NextPage<Props> = (props) => {
   })
 
   return (
-    <div className='overflow-x-hidden'>
-      <Layout className='w-screen my-5'>
-        <div className='w-full md:w-2/3 px-8 mx-auto text-white'>
-          <GlassSearch filterResults={filterCourses} />
-        </div>
-        <h1 className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
-          {props.data?.name}
-        </h1>
-        <div className='mx-auto text-center block'>
-          <div className='w-[60%] mx-auto justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3'>
-            {CourseBtns}
-          </div>
-        </div>
-      </Layout>
-    </div>
+    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 text-white'>
+        <GlassSearch filterResults={filterCourses} />
+      </div>
+      <h1 className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
+        {props.data?.name}
+      </h1>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+        {CourseBtns}
+      </div>
+    </Layout>
   )
 }
 

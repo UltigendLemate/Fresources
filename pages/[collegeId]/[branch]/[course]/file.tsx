@@ -14,7 +14,7 @@ const Index = () => {
     }
   }, [fileURL])
   return (
-    <Layout className='md:w-screen lg:w-3/4 h-screen justify-center flex mx-auto'>
+    <Layout className='md:w-screen lg:w-3/4 h-screen justify-center flex mx-auto pt-0'>
       {fileURL?.endsWith('pdf') ? (
         <PdfViewer link={fileURL} />
       ) : (
