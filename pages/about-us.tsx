@@ -56,12 +56,12 @@ const aboutus = () => {
     )
   })
 
-
-
   return (
     <div>
       <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
-        <h1 className='fresources text-5xl text-wide font-semibold'>About Us </h1>
+        <h1 className='fresources text-5xl text-wide font-semibold'>
+          About Us
+        </h1>
 
         <h1 className='fresources text-4xl text-wide '>Leaders</h1>
         <div className='flex w-1/3 md:w-full md:p-8 gap-4 md:gap-10 text-center px-auto justify-center align-center '>
@@ -77,8 +77,6 @@ const aboutus = () => {
         <div className='grid justify-center grid-cols-5 w-1/4 md:w-full md:p-8 gap-4 md:gap-10 text-center px-auto'>
           {teamLeaders}
         </div>
-
-
       </Layout>
     </div>
   )
