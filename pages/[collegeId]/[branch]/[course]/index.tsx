@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable @next/next/no-img-element */
-import { Course, Resource } from '@prisma/client'
+import { Course, Resource, ResourceType } from '@prisma/client'
 import Button from 'components/utility/Button'
 import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
@@ -8,47 +8,44 @@ import Layout from 'components/utility/Layout'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { prisma } from '~/prisma'
+import { useSearch } from '~/utils/search'
+
 // import './styles.css';
 
 interface IParams extends ParsedUrlQuery {
   course: string
 }
 
-type Data = (Course & { resources: Resource[] })[]
+type Data = Course & { resources: Resource[] }
 
 function Index({ data, course }: { data: Data; course: string }) {
-  const [resourceState, setResourceState] = useState<{
-    [key: string]: Set<Resource>
-  }>({
-    Book: new Set(),
-    Assignment: new Set(),
-    Note: new Set(),
-    Project: new Set(),
-    Paper: new Set(),
-    Playlist: new Set(),
-  })
+  const [resources, filterResources] = useSearch(data.resources, ['name'])
+
+  const resourceState = useMemo(() => {
+    const resourcesMap: Map<ResourceType, Array<Resource>> = new Map([
+      ['Book', []],
+      ['Assignment', []],
+      ['Note', []],
+      ['Project', []],
+      ['Paper', []],
+      ['Playlist', []],
+    ])
+
+    resources.forEach((resource) => {
+      resourcesMap.get(resource.type)!.push(resource)
+    })
+    return resourcesMap
+  }, [resources])
 
   const { asPath } = useRouter()
 
-  useEffect(() => {
-    setResourceState((prev) => {
-      const newState = { ...prev }
-      data.forEach((course) => {
-        course.resources.forEach((resource) => {
-          newState[resource.type].add(resource)
-        })
-      })
-      return newState
-    })
-  }, [data])
+  const [isActive, setIsActive] = useState<ResourceType>('Book')
 
-  const [isActive, setIsActive] = useState('Book')
-
-  const buttons = Object.keys(resourceState)
+  const buttons = Array.from(resourceState.keys())
     .filter((type) => {
-      return resourceState[type].size > 0
+      return resourceState.get(type)!.length > 0
     })
     .map((subject, index) => {
       return (
@@ -67,7 +64,7 @@ function Index({ data, course }: { data: Data; course: string }) {
   return (
     <Layout className='w-screen'>
       <div className='w-full md:w-2/3 p-8 mx-auto'>
-        <GlassSearch />
+        <GlassSearch filterResults={filterResources} />
       </div>
       <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
         {course.toUpperCase()}
@@ -83,14 +80,14 @@ function Index({ data, course }: { data: Data; course: string }) {
         <Dropdown
           isActive={isActive}
           setIsActive={setIsActive}
-          options={Object.keys(resourceState).filter((type) => {
-            return resourceState[type].size > 0
+          options={[...resourceState.keys()].filter((type) => {
+            return resourceState.get(type)!.length > 0
           })}
         />
       </div>
       <div className='w-full max-w-[1080px] px-4 justify-center mx-auto text-white grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 my-4'>
-        {resourceState[isActive] &&
-          [...resourceState[isActive]].map((resource) => {
+        {resourceState.get(isActive) &&
+          resourceState.get(isActive)!.map((resource) => {
             return (
               <Link
                 href={{
@@ -119,7 +116,7 @@ export default Index
 export const getServerSideProps = async (context: any) => {
   const { course } = context.params as IParams
 
-  const data = await prisma.course.findMany({
+  const data = await prisma.course.findFirst({
     where: { description: course },
     include: { resources: true },
   })
