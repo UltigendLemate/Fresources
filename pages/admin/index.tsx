@@ -1,6 +1,6 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
-import { useMemo, useRef, useState } from 'react'
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -46,6 +46,50 @@ const calculateFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
+const uploadFile = async (
+  file: UploadItem,
+  setProgressState: Dispatch<SetStateAction<number>>,
+  setFiles: Dispatch<SetStateAction<UploadItem[]>>
+) => {
+  const xhr = new XMLHttpRequest()
+  const formData = new FormData()
+
+  formData.append('file', file.file)
+
+  xhr.upload.addEventListener('progress', (event) => {
+    if (event.lengthComputable) {
+      const progress = Math.round((event.loaded * 100) / event.total)
+      setProgressState(progress)
+    }
+  })
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      setProgressState(0)
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+        setFiles((prev) => {
+          return prev.filter((f) => f !== file)
+        })
+      }
+    }
+  }
+
+  xhr.open('POST', '/api/upload', false)
+
+  formData.append(
+    'metadata',
+    JSON.stringify({
+      collegeId: file.collegeId,
+      courseIds: [...new Set(file.courseIds)],
+      name: file.name,
+      type: file.type,
+    } as Metadata)
+  )
+
+  xhr.send(formData)
+}
+
 const Admin: NextPage<Props> = (props) => {
   const [progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
@@ -63,42 +107,7 @@ const Admin: NextPage<Props> = (props) => {
 
   const upload = async () => {
     for (const file of files) {
-      const xhr = new XMLHttpRequest()
-      const formData = new FormData()
-
-      formData.append('file', file.file)
-
-      xhr.upload.addEventListener('progress', (event) => {
-        if (event.lengthComputable) {
-          const progress = Math.round((event.loaded * 100) / event.total)
-          setProgressState(progress)
-        }
-      })
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-          setProgressState(0)
-
-          if (xhr.status >= 200 && xhr.status < 300) {
-            setFiles((prev) => {
-              return prev.filter((f) => f !== file)
-            })
-          }
-        }
-      }
-      xhr.open('POST', '/api/upload', true)
-
-      formData.append(
-        'metadata',
-        JSON.stringify({
-          collegeId: file.collegeId,
-          courseIds: [...new Set(file.courseIds)],
-          name: file.name,
-          type: file.type,
-        } as Metadata)
-      )
-
-      xhr.send(formData)
+      await uploadFile(file, setProgressState, setFiles)
     }
   }
 
