@@ -17,9 +17,45 @@ export function useSearch<T>(
 
   return [
     data,
-    useCallback((query: string) => {
-      const results = fuse.current.search(query)
-      setData(results.map((result) => result.item))
-    }, []),
+    useCallback(
+      (query: string) => {
+        if (!query) {
+          setData(propsData)
+        } else {
+          const results = fuse.current.search(query)
+          setData(results.map((result) => result.item))
+        }
+      },
+      [propsData]
+    ),
   ]
 }
+
+/*
+export function useSearchExact<T>(
+  propsData: T[],
+  key: keyof T,
+  nestedKey: keyof T[typeof key]
+): ReturnType<T> {
+  const [data, setData] = useState(propsData)
+
+  return [
+    data,
+    useCallback(
+      (query: string) => {
+        if (!query) {
+          setData(propsData)
+        } else {
+          const results = propsData.filter((item) =>
+            (item[key] as { [nestedKey]: string }[]).forEach((nestedItem) =>
+              nestedItem.beginsWith(query)
+            )
+          )
+          setData(results)
+        }
+      },
+      [key, nestedKey, propsData]
+    ),
+  ]
+}
+*/

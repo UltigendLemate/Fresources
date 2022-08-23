@@ -43,5 +43,3 @@ const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
 }
 
 export default GlassSearch
-// border-[#f5a607]
-// border-blue-500

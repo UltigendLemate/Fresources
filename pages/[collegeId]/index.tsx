@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useState } from 'react'
 import { prisma } from '~/prisma'
+import { useSearch } from '~/utils/search'
 import Button from '../../components/utility/Button'
 
 interface IParams extends ParsedUrlQuery {
@@ -19,7 +20,7 @@ type Props = {
   branches: Branch[]
 }
 
-const Index: NextPage<Props> = (props: Props) => {
+const Index: NextPage<Props> = (props) => {
   const [isActive, setIsActive] = useState('2nd Year')
 
   const yearButtons = year.map((year, index) => {
@@ -56,7 +57,9 @@ const Index: NextPage<Props> = (props: Props) => {
     return <Button.Glass value={topic} key={idx} />
   })
 
-  const branchButtons = props.branches.map((branch) => {
+  const [branches, filterBranches] = useSearch(props.branches, ['name'])
+
+  const branchButtons = branches.map((branch) => {
     return (
       <Link
         href={`/${props.college.toLowerCase()}/${branch.name.toLowerCase()}`}
@@ -72,7 +75,7 @@ const Index: NextPage<Props> = (props: Props) => {
   return (
     <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
       <div className='w-full md:w-2/3 px-4'>
-        <GlassSearch />
+        <GlassSearch filterResults={filterBranches} />
       </div>
       <div className='mx-auto text-center hidden md:block'>
         <h1 className='text-white fresources text-5xl md:text-7xl font-bold mb-12'>
