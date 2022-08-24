@@ -32,6 +32,18 @@ async function main() {
 
   await prisma.college.create({
     data: {
+      name: 'IGDTUW',
+    },
+  })
+
+  await prisma.college.create({
+    data: {
+      name: 'IIT',
+    },
+  })
+
+  await prisma.college.create({
+    data: {
       name: 'NSUT',
       branches: {
         create: [
