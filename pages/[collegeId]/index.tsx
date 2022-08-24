@@ -90,9 +90,11 @@ const Index: NextPage<Props> = (props) => {
       <h1 className='text-6xl text-center mt-8 mb-8 font-bold text-white fresources'>
         {props.college.toUpperCase()}
       </h1>
-      <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
-        {yearButtons}
-      </div>
+      {props.college.toLowerCase() === 'dtu' && (
+        <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
+          {yearButtons}
+        </div>
+      )}
       <div className='w-full md:hidden px-4'>
         <Dropdown
           isActive={isActive}

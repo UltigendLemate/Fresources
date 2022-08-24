@@ -96,10 +96,14 @@ const Admin: NextPage<Props> = (props) => {
   const [defaultSelections, setDefaultSelections] = useState<{
     collegeId: string
     courseId: string
+    courseDescription: string
+    courseName: string
     type: ResourceType
   }>({
     collegeId: '',
     courseId: '',
+    courseDescription: '',
+    courseName: '',
     type: 'Book',
   })
 
@@ -248,6 +252,32 @@ const Admin: NextPage<Props> = (props) => {
               )
             })}
           </select>
+          {defaultSelections.collegeId && (
+            <select
+              className='text-black border-2 rounded-lg px-4 py-2'
+              onChange={(e) => {
+                setDefaultSelections({
+                  ...defaultSelections,
+                  courseId: e.target.value,
+                })
+              }}
+            >
+              <option value=''>Select Course</option>
+              {coursesWithBranch
+                .get(defaultSelections.collegeId)!
+                .map((course) => {
+                  return (
+                    <option
+                      key={course.id + course.branchName}
+                      value={course.id}
+                    >
+                      {`${course.description} / ${course.branchName}`}
+                    </option>
+                  )
+                })}
+            </select>
+          )}
+
           {defaultSelections.collegeId && (
             <select
               className='text-black border-2 rounded-lg px-4 py-2'
