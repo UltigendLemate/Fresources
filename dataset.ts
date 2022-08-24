@@ -71,7 +71,7 @@ export const firstYearTopics = [
 
 export const Founders = [
   {
-    photo: 'public/image/random.png',
+    photo: '/image/random.png',
     name: 'Dhruv Bakshi',
     Linkedin: '',
     description: 'Chief Technical Officer',
