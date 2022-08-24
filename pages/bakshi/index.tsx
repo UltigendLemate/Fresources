@@ -325,7 +325,7 @@ const Admin: NextPage<Props> = (props) => {
             >
               <option value=''>Select Course</option>
               {branchArray(
-                coursesWithBranch!.get(defaultSelections!.collegeId)
+                coursesWithBranch.get(defaultSelections.collegeId)!
               )!.map((course) => {
                 return (
                   <option key={course} value={course}>
@@ -348,8 +348,8 @@ const Admin: NextPage<Props> = (props) => {
             >
               <option value=''>Select Course</option>
               {subjectArray(
-                coursesWithBranch.get(defaultSelections.collegeId),
-                defaultSelections.courseDescription
+                coursesWithBranch.get(defaultSelections.collegeId)!,
+                defaultSelections.courseDescription!
               )!.map((c) => {
                 return (
                   <option key={c} value={c}>
