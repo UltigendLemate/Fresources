@@ -1,6 +1,13 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
-import { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -90,15 +97,37 @@ const uploadFile = async (
   xhr.send(formData)
 }
 
+const branchArray = (data: CourseWithBranch[]): string[] => {
+  const branches = [] as string[]
+  data.forEach((course) => {
+    if (!branches.includes(course.branchName)) {
+      branches.push(course.branchName)
+    }
+  })
+  return branches
+}
+
+const subjectArray = (data: CourseWithBranch[], branch: string): string[] => {
+  const subjects = [] as string[]
+  data.forEach((course) => {
+    if (course.branchName === branch) {
+      if (!subjects.includes(course.description)) {
+        subjects.push(course.description)
+      }
+    }
+  })
+  return subjects
+}
+
 const Admin: NextPage<Props> = (props) => {
   const [progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
   const [defaultSelections, setDefaultSelections] = useState<{
-    collegeId: string
-    courseId: string
-    courseDescription: string
-    courseName: string
-    type: ResourceType
+    collegeId: string | undefined
+    courseId: string | undefined
+    courseDescription: string | undefined
+    courseName: string | undefined
+    type: ResourceType | undefined
   }>({
     collegeId: '',
     courseId: '',
@@ -107,11 +136,43 @@ const Admin: NextPage<Props> = (props) => {
     type: 'Book',
   })
 
+  useEffect(() => {
+    if (defaultSelections.courseDescription && defaultSelections.courseName) {
+      // find the course id
+      const courseId = props.colleges
+        .find((college) => {
+          return college.id === defaultSelections.collegeId
+        })
+        ?.branches.find((branch) => {
+          return branch.name === defaultSelections.courseDescription
+        })
+        ?.courses.find((course) => {
+          return course.description === defaultSelections.courseName
+        })?.id
+      setDefaultSelections((prev) => {
+        return {
+          ...prev,
+          courseId,
+        }
+      })
+    }
+  }, [
+    defaultSelections.courseDescription,
+    defaultSelections.courseName,
+    props.colleges,
+    defaultSelections.collegeId,
+  ])
+
   const input_ref = useRef<HTMLInputElement>(null)
 
   const upload = async () => {
-    for (const file of files) {
-      await uploadFile(file, setProgressState, setFiles)
+    if (!defaultSelections.courseDescription || !defaultSelections.courseName) {
+      alert('Please select a course')
+      return
+    } else {
+      for (const file of files) {
+        await uploadFile(file, setProgressState, setFiles)
+      }
     }
   }
 
@@ -258,23 +319,20 @@ const Admin: NextPage<Props> = (props) => {
               onChange={(e) => {
                 setDefaultSelections({
                   ...defaultSelections,
-                  courseId: e.target.value,
+                  courseDescription: e.target.value,
                 })
               }}
             >
               <option value=''>Select Course</option>
-              {coursesWithBranch
-                .get(defaultSelections.collegeId)!
-                .map((course) => {
-                  return (
-                    <option
-                      key={course.id + course.branchName}
-                      value={course.id}
-                    >
-                      {`${course.description} / ${course.branchName}`}
-                    </option>
-                  )
-                })}
+              {branchArray(
+                coursesWithBranch!.get(defaultSelections!.collegeId)
+              )!.map((course) => {
+                return (
+                  <option key={course} value={course}>
+                    {course}
+                  </option>
+                )
+              })}
             </select>
           )}
 
@@ -284,23 +342,21 @@ const Admin: NextPage<Props> = (props) => {
               onChange={(e) => {
                 setDefaultSelections({
                   ...defaultSelections,
-                  courseId: e.target.value,
+                  courseName: e.target.value,
                 })
               }}
             >
               <option value=''>Select Course</option>
-              {coursesWithBranch
-                .get(defaultSelections.collegeId)!
-                .map((course) => {
-                  return (
-                    <option
-                      key={course.id + course.branchName}
-                      value={course.id}
-                    >
-                      {`${course.description} / ${course.branchName}`}
-                    </option>
-                  )
-                })}
+              {subjectArray(
+                coursesWithBranch.get(defaultSelections.collegeId),
+                defaultSelections.courseDescription
+              )!.map((c) => {
+                return (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                )
+              })}
             </select>
           )}
           <select
