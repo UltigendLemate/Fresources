@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-console */
 /* eslint-disable @next/next/no-img-element */
 import { Course, Resource, ResourceType } from '@prisma/client'
@@ -5,6 +6,7 @@ import Button from 'components/utility/Button'
 import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
+import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
@@ -16,9 +18,10 @@ import { useSearch } from '~/utils/search'
 
 interface IParams extends ParsedUrlQuery {
   course: string
+  branch: string
 }
 
-type Data = Course & { resources: Resource[] }
+type Data = (Course & { resources: Resource[] }) | null
 
 const ResourceHeading = {
   Book: 'Books',
@@ -29,8 +32,12 @@ const ResourceHeading = {
   Playlist: 'Playlist',
 }
 
-function Index({ data, course }: { data: Data; course: string }) {
-  const [resources, filterResources] = useSearch(data.resources, ['name'])
+type Props = { data: Data; course: string }
+
+function Index({ data, course }: Props) {
+  if (data === null) return <h1>Course Not Found</h1>
+
+  const [resources, filterResources] = useSearch(data!.resources, ['name'])
 
   const resourceState = useMemo(() => {
     const resourcesMap: Map<ResourceType, Array<Resource>> = new Map([
@@ -126,12 +133,19 @@ function Index({ data, course }: { data: Data; course: string }) {
 
 export default Index
 
-export const getServerSideProps = async (context: any) => {
-  const { course } = context.params as IParams
+export const getServerSideProps: GetServerSideProps<Props> = async (
+  context
+) => {
+  const { course, branch } = context.params as IParams
+
+  console.log(course, branch)
 
   const data = await prisma.course.findFirst({
-    where: { description: course },
     include: { resources: true },
+    where: {
+      description: course,
+      branches: { some: { name: branch.toUpperCase() } },
+    },
   })
 
   return {
