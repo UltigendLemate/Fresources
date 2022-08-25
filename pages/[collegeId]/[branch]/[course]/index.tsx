@@ -24,7 +24,7 @@ const ResourceHeading = {
   Book: 'Books',
   Assignment: 'Assignments',
   Note: 'Notes',
-  Project: 'Projects',
+  Project: 'Practicals',
   Paper: 'Papers',
   Playlist: 'Playlist',
 }
@@ -50,7 +50,11 @@ function Index({ data, course }: { data: Data; course: string }) {
 
   const { asPath } = useRouter()
 
-  const [isActive, setIsActive] = useState<ResourceType>('Book')
+  const [isActive, setIsActive] = useState<ResourceType>(
+    Array.from(resourceState.keys()).filter((type) => {
+      return resourceState.get(type)!.length > 0
+    })[0]
+  )
 
   const buttons = Array.from(resourceState.keys())
     .filter((type) => {
@@ -71,7 +75,7 @@ function Index({ data, course }: { data: Data; course: string }) {
       )
     })
   return (
-    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-8 items-center overflow-x-hidden'>
+    <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-8 items-center overflow-x-hidden'>
       <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
         <GlassSearch filterResults={filterResources} />
       </div>
