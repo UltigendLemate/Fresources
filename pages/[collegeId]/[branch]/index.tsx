@@ -21,11 +21,6 @@ interface IParams extends ParsedUrlQuery {
   branch: string
 }
 
-const Abbreviate = (str: string) => {
-  const number_of_spaces = str.split(' ').length - 1
-  return number_of_spaces >= 2 ? str.match(/\b([A-Z])/g)!.join('') : str
-}
-
 const Index = (props: Props) => {
   const { asPath } = useRouter()
   const CourseBtns = props.data?.courses.map((course) => {
@@ -36,10 +31,7 @@ const Index = (props: Props) => {
         passHref
       >
         <a>
-          <Button.Glass
-            value={Abbreviate(course.description)}
-            css='font-medium'
-          />
+          <Button.Glass value={course.description} css='font-medium' />
         </a>
       </Link>
     )
