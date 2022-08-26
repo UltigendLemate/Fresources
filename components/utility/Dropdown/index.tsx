@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from 'react'
 
-type Props = {
-  isActive: string
-  setIsActive: React.Dispatch<React.SetStateAction<string>>
-  options: string[]
+type Props<T extends string> = {
+  isActive: T
+  setIsActive: React.Dispatch<React.SetStateAction<T>>
+  options: T[]
 }
 
-const Dropdown = (props: Props) => {
+const Dropdown = <T extends string>(props: Props<T>) => {
   const [openDropdown, setOpenDropdown] = useState(false)
   return (
     <div className='relative'>

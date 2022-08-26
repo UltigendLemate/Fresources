@@ -10,6 +10,7 @@
     "studio": "prisma studio",
     "init": "prisma init --datasource-provider mongodb",
     "seed": "ts-node prisma/script.ts",
+    "query": "ts-node prisma/query.ts",
     "prettier": "prettier --write --ignore-path .gitignore .",
     "generate": "prisma generate"
   },
@@ -19,6 +20,7 @@
     "@react-pdf-viewer/default-layout": "^3.6.0",
     "aws-sdk": "^2.1190.0",
     "formidable": "^2.0.1",
+    "fuse.js": "^6.6.2",
     "next": "latest",
     "pdfjs-dist": "2.14.305",
     "react": "18.1.0",

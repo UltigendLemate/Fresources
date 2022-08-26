@@ -1,10 +1,12 @@
-const GlassSearch = () => {
+const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
+  filterResults,
+}) => {
   return (
     <div className='w-full block rounded-xl font-bold text-2xl search-glass shadow-[rgba(255,255,255,0.50)] z-10 relative'>
       <form>
         <label
           htmlFor='default-search'
-          className='mb-2 text-sm font-medium  sr-only '
+          className='mb-2 text-sm font-medium sr-only'
         >
           Search
         </label>
@@ -32,6 +34,7 @@ const GlassSearch = () => {
             className='text-white h-16 w-full rounded-lg font-semibold text-lg md:font-bold md:text-2xl bg-transparent pl-20 pr-4 border-transparent focus:border-[#f5a607]
             border-2 focus:outline-none'
             placeholder='Search for a topic'
+            onChange={(e) => filterResults(e.target.value)}
           />
         </div>
       </form>
@@ -40,5 +43,3 @@ const GlassSearch = () => {
 }
 
 export default GlassSearch
-// border-[#f5a607]
-// border-blue-500

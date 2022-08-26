@@ -7,7 +7,7 @@ type Props = {
 
 const Layout = (props: Props) => {
   return (
-    <div className={props.className}>
+    <div className={`pt-8 ${props.className} overflow-x-hidden`}>
       {props.children}
       <div className='fixed top-0 h-screen w-screen overflow-hidden bg-gradient-to-b  glass-gradient -z-10'>
         <div className='ball bg-primary-red -left-20 bottom-4 opacity-30' />

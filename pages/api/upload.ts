@@ -3,11 +3,10 @@ import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
-import { Metadata } from '../admin'
+import { Metadata } from '../bakshi'
 
 const s3Client = new AWS.S3({
   endpoint: process.env.DO_SPACES_URL as string,
-  region: '',
   credentials: {
     accessKeyId: process.env.DO_SPACES_ID as string,
     secretAccessKey: process.env.DO_SPACES_SECRET as string,

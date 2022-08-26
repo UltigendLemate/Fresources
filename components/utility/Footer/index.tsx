@@ -5,9 +5,9 @@ const Footer = () => {
     px-auto rounded-xl font-bold border-2 border-transparent '
     >
       <div className='flex justify-around items-center gap-12'>
-        <h2>About Us</h2>
-        <h2>Events</h2>
-        <h2>Donation</h2>
+        <a href=''>About Us</a>
+        <a href=''>Events</a>
+        <a href=''>Donation</a>
       </div>
       <div className='flex justify-around gap-6 items-center'>
         <a
