@@ -13,9 +13,9 @@ const aboutus = () => {
     return (
       <div
         key={Founder.name}
-        className='glass shadow-[rgba(255,255,255,0.50)] rounded-xl w-72 h-96 p-3'
+        className='glass shadow-[rgba(255,255,255,0.50)] rounded-xl w-72 h-96 p-3 align-center justify-center'
       >
-        <img src={Founder.photo} alt='' />
+        <img className="align-center" src={Founder.photo} alt='' />
         <h1 className='text-3xl tracking-wide  '>{Founder.name}</h1>
         <p className='text-center'>{Founder.description}</p>
       </div>
