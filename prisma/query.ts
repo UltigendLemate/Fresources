@@ -14,6 +14,13 @@ async function main() {
   //     description: 'Computer Organization & Architecture',
   //   },
   // })
+  console.log(
+    await prisma.resource.findMany({
+      where: {
+        name: 'aaaaaaaaaaaaaaaaaaaa.pdf',
+      },
+    })
+  )
 }
 
 main()
