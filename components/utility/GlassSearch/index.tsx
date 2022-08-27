@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { useState } from 'react'
+import UpdateBox from '../UpdateBox'
 
 const updates = [
   'Added notes for this subject',
@@ -24,7 +25,7 @@ const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
   const [notifHover, setNotifHover] = useState(false)
 
   return (
-    <div className='flex items-center gap-8 relative'>
+    <div className='flex items-center gap-4 sm:gap-8'>
       <div className='w-full block rounded-xl font-bold text-2xl search-glass shadow-[rgba(255,255,255,0.50)] z-10 relative '>
         <form>
           <label
@@ -71,28 +72,14 @@ const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
         onMouseLeave={() => setNotifHover(false)}
         onClick={() => setOpenDropdown(!openDropdown)}
         className={`${
-          notifHover ? 'brightness-100' : 'brightness-75'
+          notifHover || openDropdown ? 'brightness-100' : 'brightness-75'
         } transition-all cursor-pointer`}
       />
-      <div
-        className={`bg-[#020317a4] rounded-b-lg absolute z-10 transition-all right-0 rounded-lg overflow-y-scroll top-24 divide-y-[0.5px] divide-slate-600 text-lg max-h-[300px] custom-scroll border-2 border-[#caacf489] ${
-          !openDropdown && 'hidden'
-        }`}
-      >
-        {updates.map((update, index) => {
-          return (
-            <div
-              key={index}
-              className='text-white p-4 cursor-pointer hover:bg-gray-600 transition-all'
-              onClick={() => {
-                setOpenDropdown(false)
-              }}
-            >
-              {update}
-            </div>
-          )
-        })}
-      </div>
+      <UpdateBox
+        content={updates}
+        openDropdown={openDropdown}
+        setOpenDropdown={setOpenDropdown}
+      />
     </div>
   )
 }

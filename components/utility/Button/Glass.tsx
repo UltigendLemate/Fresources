@@ -8,7 +8,7 @@ export type GlassPropsType = {
 
 const Abbreviate = (str: string) => {
   const number_of_spaces = str.split(' ').length - 1
-  return number_of_spaces >= 2 ? str.match(/\b([A-Z])/g)!.join('') : str
+  return number_of_spaces >= 2 ? str.match(/\b([A-Z])/g)?.join('') : str
 }
 
 const Glass: React.FC<GlassPropsType> = (

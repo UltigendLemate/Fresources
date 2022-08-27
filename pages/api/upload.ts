@@ -65,6 +65,19 @@ export default async function handler(
             resourceIds: { push: dbResourse.id },
           },
         })
+
+        const courseData = await prisma.course.findFirst({
+          where: { id: metadata.courseIds[0] },
+          include: { branches: true },
+        })
+
+        await prisma.updates.create({
+          data: {
+            message: metadata.message,
+            url: `${metadata.url}/${college?.name}/${courseData?.branches[0].name}/${courseData?.description}`,
+            collegeId: metadata.collegeId,
+          },
+        })
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e)
