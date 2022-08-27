@@ -105,7 +105,7 @@ function Index({ data, course }: Props) {
           })}
         />
       </div>
-      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-1 sm:grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {resourceState.get(isActive) &&
           resourceState.get(isActive)!.map((resource) => {
             return (
@@ -119,8 +119,14 @@ function Index({ data, course }: Props) {
               >
                 <a>
                   <Button.Glass
-                    value={resource.name.split('.').slice(0, -1).join('.')}
-                    css={'sm:font-medium text-xl'}
+                    value={resource.name
+                      .split('.')
+                      .slice(0, -1)
+                      .join('.')
+                      .toLowerCase()
+                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                    css={'sm:font-medium text-xl truncate'}
+                    titlecase={false}
                   />
                 </a>
               </Link>

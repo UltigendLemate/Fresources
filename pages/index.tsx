@@ -25,7 +25,7 @@ const Home: NextPage<Props> = (props) => {
     return (
       <Link href={`/${college.name.toLowerCase()}`} key={college.id} passHref>
         <a>
-          <Button.Glass value={college.name} />
+          <Button.Glass value={college.name} tooltip={false} />
         </a>
       </Link>
     )
