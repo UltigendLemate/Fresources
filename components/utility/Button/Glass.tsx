@@ -14,7 +14,7 @@ export const toTitleCase = (str: string, titlecase: Boolean) => {
     : str
 }
 
-const Abbreviate = (str: string, titlecase: Boolean) => {
+export const Abbreviate = (str: string, titlecase: Boolean) => {
   return str.length > 16
     ? str.match(/[A-Z0-9_.-]/g)?.join('')
     : toTitleCase(str, titlecase)

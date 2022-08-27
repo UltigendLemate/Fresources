@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Course, Resource, ResourceType } from '@prisma/client'
 import Button from 'components/utility/Button'
+import { Abbreviate, toTitleCase } from 'components/utility/Button/Glass'
 import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
@@ -86,8 +87,11 @@ function Index({ data, course }: Props) {
       <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
         <GlassSearch filterResults={filterResources} />
       </div>
-      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
-        {course.toUpperCase()}
+      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources lg:hidden'>
+        {Abbreviate(course, true)}
+      </p>
+      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
+        {toTitleCase(course, true)}
       </p>
 
       <div className='mx-auto text-center hidden sm:block'>
