@@ -32,7 +32,7 @@ const Index: NextPage<Props> = (props) => {
     return (
       <Link
         href={`${asPath}/${course.description}`}
-        key={course.description}
+        key={course.description}   
         passHref
       >
         <a>

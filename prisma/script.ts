@@ -175,7 +175,7 @@ async function main() {
                 },
                 {
                   years: { create: { year: 1 } },
-                  description: 'Communication  System',
+                  description: 'Communication  System', 
                 },
                 {
                   years: { create: { year: 1 } },

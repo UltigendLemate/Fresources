@@ -31,7 +31,7 @@ const Glass: React.FC<GlassPropsType> = (
       </button>
       <div className={`${!isHover && 'hidden'} bg-[#000000a3]`}>
         <ReactTooltip id={props.value} place='top' effect='solid'>
-          <span className='text-xl'>{props.value} </span>
+          <span className='text-2xl tracking-wide'>{props.value} </span>
         </ReactTooltip>
       </div>
     </div>
