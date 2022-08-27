@@ -1,5 +1,4 @@
 import { Branch } from '@prisma/client'
-import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
 import { firstYearTopics, year } from 'dataset'
@@ -99,13 +98,6 @@ const Index: NextPage<Props> = (props) => {
           {yearButtons}
         </div>
       )}
-      <div className='w-full md:hidden px-4'>
-        <Dropdown
-          isActive={isActive}
-          setIsActive={setIsActive}
-          options={year}
-        />
-      </div>
       <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8  justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {isActive === '1st Year' ? firstYearButtons : branchButtons}
       </div>
