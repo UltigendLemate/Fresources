@@ -138,8 +138,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
 ) => {
   const { course, branch } = context.params as IParams
 
-  console.log(course, branch)
-
   const data = await prisma.course.findFirst({
     include: { resources: true },
     where: {

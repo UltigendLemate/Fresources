@@ -18,7 +18,10 @@ interface UploadItem {
   type: ResourceType
 }
 
-export type Metadata = Omit<UploadItem, 'file'>
+export interface Metadata extends Omit<UploadItem, 'file'> {
+  message: string
+  url: string
+}
 
 const resourceTypes: Array<ResourceType> = [
   'Book',
@@ -58,6 +61,11 @@ const uploadFile = async (
   setProgressState: Dispatch<SetStateAction<number>>,
   setFiles: Dispatch<SetStateAction<UploadItem[]>>
 ) => {
+  const updateMessage = prompt('Enter the update message here...')
+  if (!updateMessage) {
+    return
+  }
+
   const xhr = new XMLHttpRequest()
   const formData = new FormData()
 
@@ -91,6 +99,8 @@ const uploadFile = async (
       courseIds: [...new Set(file.courseIds)],
       name: file.name,
       type: file.type,
+      message: updateMessage,
+      url: window.location.origin,
     } as Metadata)
   )
 
@@ -129,10 +139,10 @@ const Admin: NextPage<Props> = (props) => {
     courseName: string | undefined
     type: ResourceType | undefined
   }>({
-    collegeId: '',
-    courseId: '',
-    courseDescription: '',
-    courseName: '',
+    collegeId: props.colleges[3].id,
+    courseId: props.colleges[3].branches[0].id,
+    courseDescription: props.colleges[3].branches[0].name,
+    courseName: props.colleges[3].branches[0].courses[0].description,
     type: 'Book',
   })
 
@@ -184,11 +194,11 @@ const Admin: NextPage<Props> = (props) => {
         name: file.name,
         collegeId: defaultSelections.collegeId
           ? defaultSelections.collegeId
-          : props.colleges[0].id,
+          : props.colleges[3].id,
         courseIds: [
           defaultSelections.courseId
             ? defaultSelections.courseId
-            : props.colleges[0].branches[0].courses[0].id,
+            : props.colleges[3].branches[0].courses[0].id,
         ],
         type: defaultSelections.type ? defaultSelections.type : 'Book',
       })

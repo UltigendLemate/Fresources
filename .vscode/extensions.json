@@ -2,6 +2,7 @@
   "recommendations": [
     "esbenp.prettier-vscode",
     "prisma.prisma",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag"
   ]
 }
