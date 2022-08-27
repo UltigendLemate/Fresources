@@ -6,15 +6,7 @@ const prisma = new PrismaClient()
 async function main() {
   await prisma.$connect()
 
-  // console.log(
-  //   await prisma.course.findFirst({
-  //     include: { resources: true },
-  //     where: {
-  //       description: 'Computer Organization & Architecture',
-  //       branches: { some: { name: 'MCE' } },
-  //     },
-  //   })
-  // )
+  await prisma.updates.deleteMany({})
 
   // await prisma.course.update({
   //   where: { id: '63066b999cbab109372b82ee' },

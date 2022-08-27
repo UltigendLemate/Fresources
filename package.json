@@ -24,7 +24,8 @@
     "next": "latest",
     "pdfjs-dist": "2.14.305",
     "react": "18.1.0",
-    "react-dom": "18.1.0"
+    "react-dom": "18.1.0",
+    "react-tooltip": "^4.2.21"
   },
   "devDependencies": {
     "@types/formidable": "^2.0.5",

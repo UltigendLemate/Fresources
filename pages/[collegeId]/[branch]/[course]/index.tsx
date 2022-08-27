@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { Course, Resource, ResourceType } from '@prisma/client'
 import Button from 'components/utility/Button'
+import { Abbreviate, toTitleCase } from 'components/utility/Button/Glass'
 import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
@@ -86,8 +87,11 @@ function Index({ data, course }: Props) {
       <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
         <GlassSearch filterResults={filterResources} />
       </div>
-      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
-        {course.toUpperCase()}
+      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources lg:hidden'>
+        {Abbreviate(course, true)}
+      </p>
+      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
+        {toTitleCase(course, true)}
       </p>
 
       <div className='mx-auto text-center hidden sm:block'>
@@ -105,7 +109,7 @@ function Index({ data, course }: Props) {
           })}
         />
       </div>
-      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-1 sm:grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {resourceState.get(isActive) &&
           resourceState.get(isActive)!.map((resource) => {
             return (
@@ -120,7 +124,8 @@ function Index({ data, course }: Props) {
                 <a>
                   <Button.Glass
                     value={resource.name.split('.').slice(0, -1).join('.')}
-                    css={'sm:font-medium text-xl'}
+                    css={'sm:font-medium text-xl sm:truncate'}
+                    titlecase={false}
                   />
                 </a>
               </Link>
@@ -137,8 +142,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
   const { course, branch } = context.params as IParams
-
-  console.log(course, branch)
 
   const data = await prisma.course.findFirst({
     include: { resources: true },

@@ -56,6 +56,14 @@ model Resource {
   courseIds String[] @db.ObjectId
 }
 
+model Updates {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  message   String
+  timeStamp DateTime @default(now())
+  url       String
+  collegeId String   @db.ObjectId
+}
+
 enum ResourceType {
   Book
   Assignment

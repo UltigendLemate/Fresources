@@ -22,11 +22,6 @@ interface IParams extends ParsedUrlQuery {
   branch: string
 }
 
-const Abbreviate = (str: string) => {
-  const number_of_spaces = str.split(' ').length - 1
-  return number_of_spaces >= 2 ? str.match(/\b([A-Z])/g)!.join('') : str
-}
-
 const Index: NextPage<Props> = (props) => {
   const { asPath } = useRouter()
 
@@ -42,7 +37,7 @@ const Index: NextPage<Props> = (props) => {
       >
         <a>
           <Button.Glass
-            value={Abbreviate(course.description)}
+            value={course.description}
             css='sm:font-medium text-xl'
           />
         </a>
@@ -58,7 +53,7 @@ const Index: NextPage<Props> = (props) => {
       <h1 className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources'>
         {props.data?.name}
       </h1>
-      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-1 sm:grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
         {CourseBtns}
       </div>
     </Layout>
