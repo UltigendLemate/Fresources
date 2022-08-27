@@ -49,7 +49,12 @@ const Glass: React.FC<GlassPropsType> = ({
           'hidden'
         } bg-[#000000a3]`}
       >
-        <ReactTooltip id={value} place='top' effect='solid'>
+        <ReactTooltip
+          id={value}
+          place='top'
+          effect='solid'
+          className='invisible md:visible'
+        >
           <span className='text-xl'>{toTitleCase(value, titlecase)}</span>
         </ReactTooltip>
       </div>

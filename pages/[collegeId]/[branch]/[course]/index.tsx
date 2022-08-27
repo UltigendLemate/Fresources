@@ -123,13 +123,8 @@ function Index({ data, course }: Props) {
               >
                 <a>
                   <Button.Glass
-                    value={resource.name
-                      .split('.')
-                      .slice(0, -1)
-                      .join('.')
-                      .toLowerCase()
-                      .replace(/\b\w/g, (l) => l.toUpperCase())}
-                    css={'sm:font-medium text-xl truncate'}
+                    value={resource.name.split('.').slice(0, -1).join('.')}
+                    css={'sm:font-medium text-xl sm:truncate'}
                     titlecase={false}
                   />
                 </a>
