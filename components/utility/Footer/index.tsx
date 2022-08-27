@@ -1,14 +1,10 @@
 const Footer = () => {
   return (
-    <div
-      className='text-white h-24 bg-transparent flex flex-col py-4 justify-around items-center gap-8 text-base md:text-xl mx-auto 
-    px-auto rounded-xl font-bold border-2 border-transparent '
-    >
-      <div className='flex justify-around items-center gap-12'>
+    <div className='text-white bg-transparent flex flex-col py-4 justify-around items-center gap-8 text-base md:text-xl mx-auto px-auto rounded-xl font-bold border-2 border-transparent'>
+      {/* <div className='flex justify-around items-center gap-12'>
         <a href=''>About Us</a>
-        <a href=''>Events</a>
         <a href=''>Donation</a>
-      </div>
+      </div> */}
       <div className='flex justify-around gap-6 items-center'>
         <a
           rel='noreferrer'
