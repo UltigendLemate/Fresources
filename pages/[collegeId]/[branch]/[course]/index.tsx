@@ -90,7 +90,7 @@ function Index({ data, course }: Props) {
       <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources lg:hidden'>
         {Abbreviate(course, true)}
       </p>
-      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
+      <p className='text-5xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
         {toTitleCase(course, true)}
       </p>
 
