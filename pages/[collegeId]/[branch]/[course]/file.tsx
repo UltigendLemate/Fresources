@@ -14,12 +14,14 @@ const Index = () => {
     }
   }, [fileURL])
   return (
-    <Layout className='md:w-screen lg:w-3/4 h-screen justify-center flex mx-auto pt-0'>
-      {fileURL?.endsWith('pdf') ? (
-        <PdfViewer link={fileURL} />
-      ) : (
-        <iframe src={fileURL} className='h-full' />
-      )}
+    <Layout className='w-screen h-screen justify-center flex mx-auto pt-0'>
+      <div className='w-screen md:w-4/5 lg:w-2/3'>
+        {fileURL?.endsWith('pdf') ? (
+          <PdfViewer link={fileURL} />
+        ) : (
+          <iframe src={fileURL} className='h-full' />
+        )}
+      </div>
     </Layout>
   )
 }

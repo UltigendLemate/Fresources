@@ -46,7 +46,7 @@ const Index: NextPage<Props> = (props) => {
   })
 
   return (
-    <Layout className='text-white w-screen py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
+    <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
       <div className='w-full md:w-4/5 lg:2/3 px-8 text-white'>
         <GlassSearch filterResults={filterCourses} />
       </div>
