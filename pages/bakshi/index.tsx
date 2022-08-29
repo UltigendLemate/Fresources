@@ -59,13 +59,9 @@ const calculateFileSize = (bytes: number) => {
 const uploadFile = async (
   file: UploadItem,
   setProgressState: Dispatch<SetStateAction<number>>,
-  setFiles: Dispatch<SetStateAction<UploadItem[]>>
+  setFiles: Dispatch<SetStateAction<UploadItem[]>>,
+  updateMessage?: String
 ) => {
-  const updateMessage = prompt('Enter the update message here...')
-  if (!updateMessage) {
-    return
-  }
-
   const xhr = new XMLHttpRequest()
   const formData = new FormData()
 
@@ -99,7 +95,7 @@ const uploadFile = async (
       courseIds: [...new Set(file.courseIds)],
       name: file.name,
       type: file.type,
-      message: updateMessage,
+      message: updateMessage ?? '',
       url: window.location.origin,
     } as Metadata)
   )
@@ -175,13 +171,23 @@ const Admin: NextPage<Props> = (props) => {
 
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = async () => {
+  const upload = () => {
     if (!defaultSelections.courseDescription || !defaultSelections.courseName) {
       alert('Please select a course')
       return
     } else {
+      const updateMessage = prompt('Enter the update message here...')
+      if (!updateMessage) {
+        return
+      }
+      let index = 0
       for (const file of files) {
-        await uploadFile(file, setProgressState, setFiles)
+        if (index === 0) {
+          uploadFile(file, setProgressState, setFiles, updateMessage)
+          index += 1
+        } else {
+          uploadFile(file, setProgressState, setFiles)
+        }
       }
     }
   }

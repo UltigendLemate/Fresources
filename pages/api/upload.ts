@@ -71,13 +71,15 @@ export default async function handler(
           include: { branches: true },
         })
 
-        await prisma.updates.create({
-          data: {
-            message: metadata.message,
-            url: `${metadata.url}/${college?.name}/${courseData?.branches[0].name}/${courseData?.description}`,
-            collegeId: metadata.collegeId,
-          },
-        })
+        if (metadata.message !== '') {
+          await prisma.updates.create({
+            data: {
+              message: metadata.message,
+              url: `${metadata.url}/${college?.name}/${courseData?.branches[0].name}/${courseData?.description}`,
+              collegeId: metadata.collegeId,
+            },
+          })
+        }
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e)
