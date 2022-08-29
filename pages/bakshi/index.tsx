@@ -1,5 +1,6 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
+import Link from 'next/link'
 import {
   Dispatch,
   SetStateAction,
@@ -8,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import useAuth, { AuthProvider } from '~/auth/context'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -129,7 +131,7 @@ const subjectArray = (data: CourseWithBranch[], branch: string): string[] => {
   return subjects
 }
 
-const Admin: NextPage<Props> = (props) => {
+const AdminPanel: NextPage<Props> = (props) => {
   const [progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
   const [defaultSelections, setDefaultSelections] = useState<{
@@ -526,6 +528,29 @@ const Admin: NextPage<Props> = (props) => {
         </div>
       </div>
     </div>
+  )
+}
+
+const AdminPage: NextPage<Props> = (props) => {
+  const auth = useAuth()
+  return (
+    <>
+      {auth.user ? (
+        <AdminPanel {...props} />
+      ) : (
+        <Link href='/bakshi/login' passHref>
+          <button>Not logged in</button>
+        </Link>
+      )}
+    </>
+  )
+}
+
+const Admin: NextPage<Props> = (props) => {
+  return (
+    <AuthProvider>
+      <AdminPage {...props} />
+    </AuthProvider>
   )
 }
 
