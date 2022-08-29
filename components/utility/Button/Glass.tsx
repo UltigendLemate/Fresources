@@ -7,9 +7,10 @@ export type GlassPropsType = {
   tooltip?: boolean
 }
 
-const Abbreviate = (str: string) => {
-  const number_of_spaces = str.split(' ').length - 1
-  return number_of_spaces >= 2 ? str.match(/\b([A-Z])/g)?.join('') : str
+export const toTitleCase = (str: string, titlecase: Boolean) => {
+  return titlecase
+    ? str.toLowerCase().replace(/\b\w/g, (l) => l.toUpperCase())
+    : str
 }
 
 const Glass: React.FC<GlassPropsType> = ({

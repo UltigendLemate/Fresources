@@ -10,7 +10,7 @@ type Props<T extends string> = {
 const Dropdown = <T extends string>(props: Props<T>) => {
   const [openDropdown, setOpenDropdown] = useState(false)
   return (
-    <div className='relative'>
+    <div className={`${!props.options.length && 'hidden'} relative`}>
       <div
         className={`search-glass flex items-center justify-between transition-all text-white p-4 text-xl ${
           openDropdown ? 'rounded-t-lg' : 'rounded-lg'

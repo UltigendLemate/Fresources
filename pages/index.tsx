@@ -25,7 +25,11 @@ const Home: NextPage<Props> = (props) => {
     return (
       <Link href={`/${college.name.toLowerCase()}`} key={college.id} passHref>
         <a>
-          <Button.Glass value={college.name} />
+          <Button.Glass
+            value={college.name}
+            tooltip={false}
+            titlecase={false}
+          />
         </a>
       </Link>
     )
@@ -36,7 +40,7 @@ const Home: NextPage<Props> = (props) => {
       <div className='w-full md:w-4/5 lg:2/3 px-8'>
         <GlassSearch filterResults={filterColleges} />
       </div>
-      <div className='w-full md:w-4/5 lg:2/3  flex flex-col items-center gap-20 md:gap-16 sm:gap-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+      <div className='w-full md:w-4/5  flex flex-col items-center gap-20 md:gap-16 sm:gap-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
         <div className='text-5xl md:text-8xl font-bold'>
           <h1 className='text-white fresources'>FRESOURCES</h1>
         </div>

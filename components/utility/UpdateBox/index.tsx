@@ -33,15 +33,20 @@ const UpdateBox = (props: Props) => {
           ) : (
             updates.map((update) => {
               return (
-                <a href={update.url} key={update.id}>
-                  <div className='text-white p-4 cursor-pointer hover:bg-gray-600 transition-all'>
-                    <div>{update.message}</div>
-                    <div className='text-sm text-[#d9d9d9] italic'>
-                      {new Date(update.timeStamp).toLocaleTimeString()} -{' '}
-                      {new Date(update.timeStamp).toLocaleDateString()}
+                <div className='divide-y' key={update.id}>
+                  <a href={update.url}>
+                    <div className='text-white p-4 cursor-pointer hover:bg-gray-600 transition-all flex justify-between'>
+                      <div>
+                        <div>{update.message}</div>
+                        <div className='text-sm text-[#d9d9d9] italic'>
+                          {new Date(update.timeStamp).toLocaleTimeString()} -{' '}
+                          {new Date(update.timeStamp).toLocaleDateString()}
+                        </div>
+                      </div>
+                      <div className='p-2'>{update.url.split('/')[4]}</div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
               )
             })
           )}
