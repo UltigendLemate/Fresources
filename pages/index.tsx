@@ -21,7 +21,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 const Home: NextPage<Props> = (props) => {
   const [colleges, filterColleges] = useSearch(props.colleges, ['name'])
 
-  const collegeButtons = colleges.map((college) => {
+  const collegeButtons = colleges.reverse().map((college) => {
     return (
       <Link href={`/${college.name.toLowerCase()}`} key={college.id} passHref>
         <a>
