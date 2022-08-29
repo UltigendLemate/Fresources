@@ -21,19 +21,25 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 const Home: NextPage<Props> = (props) => {
   const [colleges, filterColleges] = useSearch(props.colleges, ['name'])
 
-  const collegeButtons = colleges.reverse().map((college) => {
-    return (
-      <Link href={`/${college.name.toLowerCase()}`} key={college.id} passHref>
-        <a>
-          <Button.Glass
-            value={college.name}
-            tooltip={false}
-            titlecase={false}
-          />
-        </a>
-      </Link>
-    )
-  })
+  const collegeButtons = colleges
+    .sort((a, b) => {
+      if (a.name < b.name) return -1
+      if (a.name > b.name) return 1
+      return 0
+    })
+    .map((college) => {
+      return (
+        <Link href={`/${college.name.toLowerCase()}`} key={college.id} passHref>
+          <a>
+            <Button.Glass
+              value={college.name}
+              tooltip={false}
+              titlecase={false}
+            />
+          </a>
+        </Link>
+      )
+    })
 
   return (
     <Layout className='text-white w-screen h-screen flex flex-col gap-16 items-center overflow-x-hidden'>
