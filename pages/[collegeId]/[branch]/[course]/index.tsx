@@ -73,9 +73,8 @@ function Index({ data, course }: Props) {
         <div key={index + subject}>
           <button
             onClick={() => setIsActive(subject)}
-            className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${
-              isActive === subject ? 'glass bg-[#ffffff17]' : ''
-            }`}
+            className={`font-bold md:text-2xl text-md shadow-[rgba(255,255,255,0.50)] rounded-xl duration-300 transition border-transparent hover:border-[#f5a607] px-6 py-3 ${isActive === subject ? 'glass bg-[#ffffff17]' : ''
+              }`}
           >
             {ResourceHeading[subject]}
           </button>
@@ -130,7 +129,7 @@ function Index({ data, course }: Props) {
                 </a>
               </Link>
             )
-          })}
+          }).reverse()}
       </div>
     </Layout>
   )

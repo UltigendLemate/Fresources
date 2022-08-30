@@ -1,5 +1,6 @@
 import { Branch, College, Course, Resource } from '@prisma/client'
 import DeleteModel from 'components/miscellaneous/DeleteModel'
+import { Filter } from 'components/utility/Filter'
 import { useEffect, useState } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
 
@@ -93,6 +94,7 @@ const DeletionPanel = () => {
 const DeletionPage = () => {
   return (
     <AuthProvider>
+      <Filter />
       <DeletionPanel />
     </AuthProvider>
   )
