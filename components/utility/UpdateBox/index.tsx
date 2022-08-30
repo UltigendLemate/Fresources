@@ -10,7 +10,6 @@ type Props = {
 const UpdateBox = (props: Props) => {
   const [updates, setUpdates] = useState<UpdatesResponse>([])
   const hideUpdate = () => {
-
     props.setOpenDropdown(false)
   }
   if (typeof window !== 'undefined') {
@@ -25,8 +24,9 @@ const UpdateBox = (props: Props) => {
 
   return (
     <div
-      className={`h-screen w-screen top-0 left-0 fixed z-20 ${!props.openDropdown && 'hidden'
-        }`}
+      className={`h-screen w-screen top-0 left-0 fixed z-20 ${
+        !props.openDropdown && 'hidden'
+      }`}
       onClick={() => props.setOpenDropdown(false)}
     >
       <div className='bg-[#020317df] rounded-b-lg absolute z-30 transition-all right-2 rounded-lg top-[17%] text-lg custom-scroll border-2 border-[#caacf489] divide-y-2 divide-slate-600 shadow-lg w-[90%] sm:w-[400px]'>
