@@ -43,7 +43,7 @@ const Home: NextPage<Props> = (props) => {
 
   return (
     <Layout className='text-white w-screen h-screen flex flex-col gap-16 items-center overflow-x-hidden'>
-      <div className='w-full md:w-4/5 lg:2/3 px-8'>
+      <div className='w-full md:w-4/5 px-8 '>
         <GlassSearch filterResults={filterColleges} />
       </div>
       <div className='w-full md:w-4/5  flex flex-col items-center gap-20 md:gap-16 sm:gap-16 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
