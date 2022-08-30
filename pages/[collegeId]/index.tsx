@@ -87,7 +87,7 @@ const Index: NextPage<Props> = (props) => {
 
   return (
     <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
-      <div className='w-full md:w-4/5 lg:w-2/3 px-8'>
+      <div className='w-full md:w-4/5  px-8'>
         <GlassSearch filterResults={filterBranches} />
       </div>
       <h1 className='text-6xl text-center mt-8 mb-8 font-bold text-white fresources'>
