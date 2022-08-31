@@ -85,7 +85,7 @@ export default function PdfViewer(props: Props) {
         fileUrl={props.link}
         plugins={[defaultLayoutPluginInstance]}
         theme='dark'
-        defaultScale={SpecialZoomLevel.PageWidth}
+        defaultScale={SpecialZoomLevel.ActualSize}
       ></Viewer>
     </Worker>
   )

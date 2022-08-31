@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import UpdateBox from '../UpdateBox'
 
@@ -21,11 +22,11 @@ const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
   filterResults,
 }) => {
   const [openDropdown, setOpenDropdown] = useState(false)
-
+  const [homeHover, setHomeHover] = useState(false)
   const [notifHover, setNotifHover] = useState(false)
 
   return (
-    <div className='flex items-center gap-4 sm:gap-8'>
+    <div className='flex items-center gap-4 sm:gap-8 '>
       <div className='w-full block rounded-xl font-bold text-2xl search-glass shadow-[rgba(255,255,255,0.50)] z-10 relative '>
         <form>
           <label
@@ -63,6 +64,19 @@ const GlassSearch: React.FC<{ filterResults: ({}: string) => void }> = ({
           </div>
         </form>
       </div>
+      <Link href='/'>
+        <Image
+          src='/static/images/home.svg'
+          alt=''
+          height={35}
+          width={35}
+          onMouseEnter={() => setHomeHover(true)}
+          onMouseLeave={() => setHomeHover(false)}
+          className={`${
+            homeHover ? 'brightness-100' : 'brightness-75'
+          } transition-all cursor-pointer`}
+        />
+      </Link>
       <Image
         src='/static/images/notif.svg'
         alt=''

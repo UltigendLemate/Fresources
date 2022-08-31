@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactTooltip from 'react-tooltip'
 
 export type GlassPropsType = {
@@ -27,6 +27,19 @@ const Glass: React.FC<GlassPropsType> = ({
   titlecase = true,
 }: GlassPropsType): JSX.Element => {
   const [isHover, setIsHover] = useState(false)
+  const [toolShow, setToolShow] = useState(true)
+  const tool = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth > 640) {
+        setToolShow(true)
+      } else {
+        setToolShow(false)
+      }
+    }
+  }
+  useEffect(() => {
+    tool()
+  }, [])
 
   return (
     <div>
@@ -36,7 +49,7 @@ const Glass: React.FC<GlassPropsType> = ({
         className={`w-full px-8 py-4 md:px-6 rounded-xl sm:font-bold text-2xl glass shadow-[rgba(255,255,255,0.50)] duration-300 transition border-2 border-transparent hover:border-[#f5a607] ${
           css && css
         }`}
-        onMouseEnter={() => setIsHover(true)}
+        onMouseEnter={() => setIsHover(toolShow)}
         onMouseLeave={() => setIsHover(false)}
       >
         {titlecase ? Abbreviate(value, titlecase) : value}
