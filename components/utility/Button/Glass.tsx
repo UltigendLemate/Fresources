@@ -26,9 +26,6 @@ const Glass: React.FC<GlassPropsType> = ({
   tooltip = true,
   titlecase = true,
 }: GlassPropsType): JSX.Element => {
-
-
-
   const [isHover, setIsHover] = useState(false)
   const [toolShow, setToolShow] = useState(true)
   const tool = () => {
@@ -49,19 +46,21 @@ const Glass: React.FC<GlassPropsType> = ({
       <button
         data-tip
         data-for={value}
-        className={`w-full px-8 py-4 md:px-6 rounded-xl sm:font-bold text-2xl glass shadow-[rgba(255,255,255,0.50)] duration-300 transition border-2 border-transparent hover:border-[#f5a607] ${css && css
-          }`}
+        className={`w-full px-8 py-4 md:px-6 rounded-xl sm:font-bold text-2xl glass shadow-[rgba(255,255,255,0.50)] duration-300 transition border-2 border-transparent hover:border-[#f5a607] ${
+          css && css
+        }`}
         onMouseEnter={() => setIsHover(toolShow)}
         onMouseLeave={() => setIsHover(false)}
       >
         {titlecase ? Abbreviate(value, titlecase) : value}
       </button>
       <div
-        className={`${(!isHover ||
-          !tooltip ||
-          toTitleCase(value, titlecase) === Abbreviate(value, titlecase)) &&
+        className={`${
+          (!isHover ||
+            !tooltip ||
+            toTitleCase(value, titlecase) === Abbreviate(value, titlecase)) &&
           'hidden'
-          } bg-[#000000a3]`}
+        } bg-[#000000a3]`}
       >
         <ReactTooltip
           id={value}
@@ -72,7 +71,7 @@ const Glass: React.FC<GlassPropsType> = ({
           <span className='text-xl'>{toTitleCase(value, titlecase)}</span>
         </ReactTooltip>
       </div>
-    </div >
+    </div>
   )
 }
 
