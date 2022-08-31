@@ -126,7 +126,7 @@ function Index({ data, course }: Props) {
                   key={resource.id}
                   passHref
                 >
-                  <a>
+                  <a target='_blank'>
                     <Button.Glass
                       value={resource.name.split('.').slice(0, -1).join('.')}
                       css={'sm:font-medium text-xl sm:truncate'}
@@ -155,6 +155,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       description: course,
       branches: { some: { name: branch.toUpperCase() } },
     },
+    orderBy: { description: 'asc' },
   })
 
   return {
