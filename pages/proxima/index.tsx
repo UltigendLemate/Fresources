@@ -64,9 +64,10 @@ const Index = () => {
             <div
               key={resource.id}
               onClick={() => fileDeleteHandler(resource, 'DTU')}
-              className='p-2 w-4/5 bg-slate-900 text-white rounded-lg'
+              className='p-2 w-4/5 bg-slate-900 text-white rounded-lg flex justify-between'
             >
-              {resource.name}
+              <div>{resource.name}</div>
+              <div>{course.description}</div>
             </div>
           )
         })
