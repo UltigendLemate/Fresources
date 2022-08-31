@@ -1,7 +1,6 @@
 import crypto from 'crypto'
 
 const SALT = process.env.SALT || 'salt'
-export const COOKIE_KEY = 'fresources-jwt'
 
 export function hashPassword(password: string) {
   const hash = crypto

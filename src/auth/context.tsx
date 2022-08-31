@@ -9,9 +9,9 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { COOKIE_KEY } from './deps'
 
 import { User } from './types'
-import { COOKIE_KEY } from './validate'
 
 interface AuthContextType {
   user?: User
