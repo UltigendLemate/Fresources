@@ -14,10 +14,18 @@ const Index = () => {
       setFileURL(path as string)
     }
   }, [fileURL])
+
+  const title = decodeURIComponent(
+    fileURL
+      .split('/')
+      .pop()
+      ?.replace(/\.[^/.]+$/, '') || ''
+  )
+
   return (
     <>
       <Head>
-        <title>Fresources</title>
+        <title>{title}</title>
       </Head>
       <Layout className='w-screen h-screen justify-center flex mx-auto pt-0'>
         <div className='w-full h-full fixed'>

@@ -1,7 +1,8 @@
 import assert from 'assert'
 import { getCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { COOKIE_KEY, validatePasswordHash } from '~/auth/validate'
+import { COOKIE_KEY } from '~/auth/deps'
+import { validatePasswordHash } from '~/auth/validate'
 import { prisma } from '~/prisma'
 
 export default async function handler(
