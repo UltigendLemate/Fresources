@@ -155,6 +155,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       description: course,
       branches: { some: { name: branch.toUpperCase() } },
     },
+    orderBy: { description: 'asc' },
   })
 
   return {
