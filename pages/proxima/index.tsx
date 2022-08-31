@@ -56,8 +56,7 @@ const Index = () => {
     })
   }
 
-  const file_names = allFiles
-    .find((college) => college.name === 'DTU')
+  const file_names = allFiles.find((college) => college.name === 'DTU')
     ?.branches.map((branch) => {
       return branch.courses.map((course) => {
         return course.resources.map((resource) => {
