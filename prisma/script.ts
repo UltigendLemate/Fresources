@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-
 const prisma = new PrismaClient()
-
 const dropDatabase = async () => {
   await prisma.branch.deleteMany()
   await prisma.college.deleteMany()
@@ -10,37 +8,10 @@ const dropDatabase = async () => {
   await prisma.resource.deleteMany()
 }
 
-const getCourse = (description: string, year = 2) => {
-  return {
-    years: { connect: { year } },
-    description,
-  }
-}
-
-const getCourses = (descriptions: string[], year = 2) => {
-  return descriptions.map((description) => getCourse(description, year))
-}
-
-const createCourse = (name: string, descriptions: string[]) => {
-  return { name, courses: { create: getCourses(descriptions) } }
-}
-
 async function main() {
   await prisma.$connect()
 
   await dropDatabase()
-
-  await prisma.college.create({
-    data: {
-      name: 'IGDTUW',
-    },
-  })
-
-  await prisma.college.create({
-    data: {
-      name: 'IIT',
-    },
-  })
 
   await prisma.college.create({
     data: {
@@ -54,16 +25,9 @@ async function main() {
                 {
                   years: { create: { year: 1 } },
                   description: 'Physics',
-                  resources: {
-                    create: {
-                      name: 'David J Morrin Waves',
-                      type: 'Book',
-                      url: 'https://www.prisma.io',
-                    },
-                  },
                 },
                 {
-                  years: { connect: { year: 1 } },
+                  years: { create: { year: 1 } },
                   description: 'Basics of Mechanical Engineering',
                 },
               ],
@@ -73,7 +37,7 @@ async function main() {
             name: 'BIOTECH',
             courses: {
               create: {
-                years: { connect: { year: 1 } },
+                years: { create: { year: 1 } },
                 description: 'Physics for BT',
               },
             },
@@ -82,211 +46,688 @@ async function main() {
       },
     },
   })
-
   await prisma.college.create({
     data: {
       name: 'DTU',
       branches: {
         create: [
           {
+            name: 'CH',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Materials and Metallurgy',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Chemical Engineering Process Calculations',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Transport Phenomena',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Chemical Engineering Thermodynamics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Design and Analysis',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Instrumentation and Process Control',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Fluid Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Chemical Reaction Engineering - 1',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mechanical Operations',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Heat Transfer',
+                },
+              ],
+            },
+          },
+          {
             name: 'BT',
             courses: {
               create: [
                 {
-                  years: {
-                    connectOrCreate: {
-                      create: { year: 2 },
-                      where: { year: 2 },
-                    },
-                  },
+                  years: { create: { year: 1 } },
                   description: 'Applied Mathematics',
                 },
-                ...getCourses([
-                  'Introduction to Biotechnology',
-                  'Biochemistry',
-                  'Genetics',
-                  'Fundamental of Computational Biology',
-                  'Data Structure and Algorithm',
-                  'Molecular Biology',
-                  'Drug Design and Delivery',
-                  'Microbiology',
-                  'Advances in Computational Biology',
-                ]),
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Introduction to Biotechnology',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Biochemistry',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Genetics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Fundamental of Computational Biology',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Data Structure and Algorithm',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Molecular Biology',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Drug Design and Delivery',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Microbiology',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Advances in Computational Biology',
+                },
               ],
             },
           },
-          createCourse('CHE', [
-            'Engineering Materials and Metallurgy',
-            'Chemical Engineering Process Calculations',
-            'Transport Phenomena',
-            'Chemical Engineering Thermodynamics',
-            'Engineering Design and Analysis',
-            'Instrumentation and Process Control',
-            'Fluid Mechanics',
-            'Chemical Reaction Engineering - 1',
-            'Mechanical Operations',
-            'Heat Transfer',
-          ]),
-
-          createCourse('EP', [
-            'Engineering Mechanics',
-            'Introduction to Computing',
-            'Mathematical  Physics',
-            'Classical and Quantum Mechanics',
-            'Digital Electronics',
-            'Communication  System',
-            'Condensed Matter Physics',
-            'Optics',
-            'Microprocessor and Interfacing',
-            'Computational Methods',
-          ]),
-
-          createCourse('ME', [
-            'Engineering Materials & Metallurgy',
-            'Mechanics of Solids',
-            'Thermal Engineering-I',
-            'Machine Drawing and Solid Modelling',
-            'Engineering Analysis and Design',
-            'Manufacturing Machines',
-            'Thermal Engineering-II',
-            'Fluid Mechanics',
-            'Kinematics of Machines',
-            'Manufacturing Technology-I',
-          ]),
-
-          createCourse('IT', [
-            'Analog  Electronics',
-            'Data Structures',
-            'Object Oriented Programming',
-            'Discrete  Structures',
-            'Digital Electronics',
-            'Database Management Systems',
-            'Operating System Design',
-            'Computer Organization and Architecture',
-            'Algorithm Design and Analycsis',
-            'Engineering Analysis and Design',
-          ]),
-          createCourse('ENE', [
-            'Building Material & Construction',
-            'Strength of Materials',
-            'Engineering & Environmental Surveying',
-            'Environmental Chemistry & Microbiology',
-            'Engineering Analysis & Design',
-            'Structural Analysis',
-            'Geotechnical Engineering',
-            'Water Engineering: Design & Application',
-            'Engineering Geology,GIS & Remote Sensing',
-            'Fluid Mechanics & Hydraulic Machines',
-          ]),
-
-          createCourse('ECE', [
-            'Electronic Instrumentation and Measurements',
-            'Analog Electronics - I',
-            'Digital Design- I',
-            'Signals & Systems',
-            'Engineering Analysis & Design(Network Anatysis and Synthesis)',
-            'Electromagnetics',
-            'Analog Electronics-II',
-            'Digital Design - II',
-            'Communication Systems',
-            'Computer Architecture',
-          ]),
-          createCourse('EE', [
-            'Numerical and Engineering Optimization Methods',
-            'Network Analysis & Synthesis',
-            'Electronic Devices and Circuits',
-            'Electromechanical Energy Conversion and Transformer',
-            'Electromagnetic Field Theory',
-            'Power Plant Engineering',
-            'Linear Integrated Circuit',
-            'Digital circuits and System',
-            'Control Systems',
-            'Asynchronous and Synchronous Machines',
-          ]),
-          createCourse('COE', [
-            'Analog Electronics',
-            'Data Structures',
-            'Object Oriented Programming',
-            'Discrete Structures',
-            'Engineering Analysis and Design (Modelling and Simulation)',
-            'Digital Electronics',
-            'Database Management Systems',
-            'Operating Systems Design',
-            'Computer Organization and Architecture',
-            'Algorithm Design and Analysis',
-          ]),
-          createCourse('SE', [
-            'Digital Electronics',
-            'Data Structures',
-            'Object Oriented Programming',
-            'Operating System',
-            'Engineering Analysis and Design',
-            'Computer System Architecture',
-            'Object Oriented Software Engineering',
-            'Machine Learning',
-            'Database Management Systems',
-          ]),
-          createCourse('PIE', [
-            'Kinematic And Dynamic Of Machines',
-            'Engineering Materials & Metallurgy',
-            'Thermal Engineering-I',
-            'Manufacturing Machines',
-            'Engineering Analysis And Design(Modeling And Simulation)',
-            'Machine Design',
-            'Thermal Engineering-II',
-            'Industrial Engineering & Operation Research',
-            'Fluid Mechanics & Machinery',
-            'Metal Cutting & Tool Design',
-          ]),
-          createCourse('MAM', [
-            'Quantitative Techniques',
-            'Engineering Mechanics',
-            'Thermodynamics',
-            'Manufacturing Machines',
-            'Engineering Analysis and Design',
-            'Automotive Electrical and Electronics',
-            'Heat and Mass Transfer',
-            'Theory of Machines',
-            'Mechanics of Solids',
-            'Material Engineering & Metallurgy',
-          ]),
-          createCourse('CE', [
-            'Basic Electronics & Instrumentation',
-            'Civil Engineering Basics and Applications',
-            'Engineering Mechanics',
-            'Fluid Mechanics',
-            'Engineering Analysis And Design',
-            'Environmental Engineering',
-            'Mechanics of solids',
-            'Engineering Survey',
-            'Soil Mechanics',
-            'Hydraulics & Hydraulic Machines',
-          ]),
-          createCourse('MCE', [
-            'Discrete Mathematics',
-            'Mathematics-III',
-            'Probability & Statistics',
-            'Engineering Analysis and Design (Differential Equations and Appications)',
-            'Algorithm Design & Analysis',
-            'Real Analysis',
-            'Scientific Computing',
-            'Computer Organization & Architecture ',
-            'Linear Algebra',
-            'Data Structures',
-          ]),
+          {
+            name: 'EP',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Introduction to Computing',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mathematical  Physics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Classical and Quantum Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Digital Electronics (Engineering  Analysis and  Design)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Communication  System',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Condensed Matter Physics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Optics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Microprocessor and Interfacing',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computational Methods',
+                },
+              ],
+            },
+          },
+          {
+            name: 'ME',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Materials & Metallurgy',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mechanics of Solids',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Thermal Engineering - I',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Analysis and Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Manufacturing Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Thermal Engineering - II',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Kinematics of Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Manufacturing Technology - I',
+                },
+              ],
+              connect: {
+                description: 'Fluid Mechanics',
+              },
+            },
+          },
+          {
+            name: 'IT',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Analog  Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Data Structures',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Object Oriented Programming',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Discrete  Structures',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Engineering Analysis and Design (Modeling & Simulation)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Database Management Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Operating System Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computer Organization and Architecture',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Algorithm Design and Analysis',
+                },
+              ],
+            },
+          },
+          {
+            name: 'ENE',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Building Material & Construction',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Strength of Materials',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering & Environmental Surveying',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Environmental Chemistry & Microbiology',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Analysis & Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Structural Analysis',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Geotechnical Engineering',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Water Engineering: Design & Application',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Geology, GIS & Remote Sensing',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Fluid Mechanics & Hydraulic Machines',
+                },
+              ],
+            },
+          },
+          {
+            name: 'ECE',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Electronic Instrumentation and Measurements',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Analog Electronics - I',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital Design - I',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Signals & Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Engineering Analysis & Design (Network Anatysis and Synthesis)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Electromagnetics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Analog Electronics - II',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital Design - II',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Communication Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computer Architecture',
+                },
+              ],
+              connect: {
+                description: 'Communication System',
+              },
+            },
+          },
+          {
+            name: 'EE',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Numerical and Engineering Optimization Methods',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Network Analysis & Synthesis',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Electronic Devices and Circuits',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Electromechanical Energy Conversion and Transformer',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Electromagnetic Field Theory',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Power Plant Engineering',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Linear Integrated Circuit',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital circuits and System',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Control Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Asynchronous and Synchronous Machines',
+                },
+              ],
+            },
+          },
+          {
+            name: 'CO',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Analog Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Data Structures',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Object Oriented Programming',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Discrete Structures',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Engineering Analysis and Design (Modelling and Simulation)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Database Management Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Operating Systems Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computer Organization and Architecture',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Algorithm Design and Analysis',
+                },
+              ],
+            },
+          },
+          {
+            name: 'SE',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Digital Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Data Structures',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Object Oriented Programming',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Operating System',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Analysis and Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computer System Architecture',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Object Oriented Software Engineering',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Machine Learning',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Database Management Systems',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Algorithm Design & Analysis',
+                },
+              ],
+            },
+          },
+          {
+            name: 'PI',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Kinematic And Dynamic Of Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Materials & Metallurgy',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Manufacturing Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Engineering Analysis And Design (Modeling And Simulation)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Machine Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Industrial Engineering & Operation Research',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Fluid Mechanics & Machinery',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Metal Cutting & Tool Design',
+                },
+              ],
+              connect: [
+                {
+                  description: 'Thermal Engineering - I',
+                },
+                {
+                  description: 'Thermal Engineering - II',
+                },
+              ],
+            },
+          },
+          {
+            name: 'MAM',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Quantitative Techniques',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Thermodynamics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Manufacturing Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Analysis and Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Automotive Electrical and Electronics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Heat and Mass Transfer',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Theory of Machines',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mechanics of Solids',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Material Engineering & Metallurgy',
+                },
+              ],
+            },
+          },
+          {
+            name: 'CE',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Basic Electronics & Instrumentation',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Civil Engineering Basics and Applications',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Analysis and Design',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Environmental Engineering',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mechanics of solids',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Engineering Survey',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Soil Mechanics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Hydraulics & Hydraulic Machines',
+                },
+              ],
+              connect: [
+                {
+                  description: 'Fluid Mechanics',
+                },
+                {
+                  description: 'Engineering Mechanics',
+                },
+              ],
+            },
+          },
+          {
+            name: 'MC',
+            courses: {
+              create: [
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Data Structure',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Discrete Mathematics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Mathematics - I',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Probability & Statistics',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description:
+                    'Engineering Analysis and Design (Differential Equations and Appications)',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Algorithm Design & Analysis',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Real Analysis',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Scientific Computing',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Computer Organization & Architecture',
+                },
+                {
+                  years: { create: { year: 1 } },
+                  description: 'Linear Algebra',
+                },
+              ],
+            },
+          },
         ],
       },
     },
   })
 }
-
 main()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
+  .catch(async () => {
     await prisma.$disconnect()
-    // eslint-disable-next-line no-console
-    console.error(e)
     process.exit(1)
   })

@@ -17,7 +17,7 @@ const Index = () => {
 
   const title = decodeURIComponent(
     fileURL
-      .split('/')
+      ?.split('/')
       .pop()
       ?.replace(/\.[^/.]+$/, '') || ''
   )

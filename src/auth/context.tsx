@@ -9,7 +9,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { COOKIE_KEY } from './deps'
+import { COOKIE_KEY } from './validate'
 
 import { User } from './types'
 
