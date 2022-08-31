@@ -98,7 +98,7 @@ const uploadFile = async (
       name: file.name,
       type: file.type,
       message: updateMessage ?? '',
-      url: window.location.origin,
+      url: '',
     } as Metadata)
   )
 
