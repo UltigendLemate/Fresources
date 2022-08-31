@@ -2,7 +2,7 @@ import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import {
   defaultLayoutPlugin,
-  ToolbarSlot,
+  ToolbarSlot
 } from '@react-pdf-viewer/default-layout'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 
@@ -85,7 +85,7 @@ export default function PdfViewer(props: Props) {
         fileUrl={props.link}
         plugins={[defaultLayoutPluginInstance]}
         theme='dark'
-        defaultScale={SpecialZoomLevel.PageWidth}
+        defaultScale={SpecialZoomLevel.ActualSize}
       ></Viewer>
     </Worker>
   )
