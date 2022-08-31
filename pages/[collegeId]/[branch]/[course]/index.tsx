@@ -8,6 +8,7 @@ import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
 import { GetServerSideProps } from 'next'
+import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
@@ -83,56 +84,61 @@ function Index({ data, course }: Props) {
       )
     })
   return (
-    <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-8 items-center overflow-x-hidden'>
-      <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
-        <GlassSearch filterResults={filterResources} />
-      </div>
-      <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources lg:hidden'>
-        {Abbreviate(course, true)}
-      </p>
-      <p className='text-5xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
-        {toTitleCase(course, true)}
-      </p>
-
-      <div className='mx-auto text-center hidden sm:block'>
-        <div className='text-white flex justify-center gap-10 mx-auto text-center max-w-[1480px] pb-5'>
-          {buttons}
+    <>
+      <Head>
+        <title>Fresources - {toTitleCase(course, true)}</title>
+      </Head>
+      <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-8 items-center overflow-x-hidden'>
+        <div className='w-full md:w-4/5 lg:2/3 px-8 text-whiteo'>
+          <GlassSearch filterResults={filterResources} />
         </div>
-      </div>
+        <p className='text-6xl text-center mt-8 mb-16 font-bold text-white fresources lg:hidden'>
+          {Abbreviate(course, true)}
+        </p>
+        <p className='text-5xl text-center mt-8 mb-16 font-bold text-white fresources hidden lg:block'>
+          {toTitleCase(course, true)}
+        </p>
 
-      <div className='w-full px-4 sm:hidden'>
-        <Dropdown
-          isActive={isActive}
-          setIsActive={setIsActive}
-          options={[...resourceState.keys()].filter((type) => {
-            return resourceState.get(type)!.length > 0
-          })}
-        />
-      </div>
-      <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-1 sm:grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
-        {resourceState.get(isActive) &&
-          resourceState.get(isActive)!.map((resource) => {
-            return (
-              <Link
-                href={{
-                  pathname: `${asPath}/file`,
-                  query: { fileId: resource.url },
-                }}
-                key={resource.id}
-                passHref
-              >
-                <a>
-                  <Button.Glass
-                    value={resource.name.split('.').slice(0, -1).join('.')}
-                    css={'sm:font-medium text-xl sm:truncate'}
-                    titlecase={false}
-                  />
-                </a>
-              </Link>
-            )
-          })}
-      </div>
-    </Layout>
+        <div className='mx-auto text-center hidden sm:block'>
+          <div className='text-white flex justify-center gap-10 mx-auto text-center max-w-[1480px] pb-5'>
+            {buttons}
+          </div>
+        </div>
+
+        <div className='w-full px-4 sm:hidden'>
+          <Dropdown
+            isActive={isActive}
+            setIsActive={setIsActive}
+            options={[...resourceState.keys()].filter((type) => {
+              return resourceState.get(type)!.length > 0
+            })}
+          />
+        </div>
+        <div className='w-full md:w-4/5 lg:2/3 px-8 justify-center items-center text-white grid grid-cols-1 sm:grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+          {resourceState.get(isActive) &&
+            resourceState.get(isActive)!.map((resource) => {
+              return (
+                <Link
+                  href={{
+                    pathname: `${asPath}/file`,
+                    query: { fileId: resource.url },
+                  }}
+                  key={resource.id}
+                  passHref
+                >
+                  <a>
+                    <Button.Glass
+                      value={resource.name.split('.').slice(0, -1).join('.')}
+                      css={'sm:font-medium text-xl sm:truncate'}
+                      titlecase={false}
+                    />
+                  </a>
+                </Link>
+              )
+            })}
+        </div>
+      </Layout>
+    </>
   )
 }
 
