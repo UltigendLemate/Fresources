@@ -1,6 +1,15 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
 import type { GetServerSideProps, NextPage } from 'next'
-import { Dispatch, SetStateAction, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import useAuth, { AuthProvider } from '~/auth/context'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -11,7 +20,10 @@ interface UploadItem {
   type: ResourceType
 }
 
-export type Metadata = Omit<UploadItem, 'file'>
+export interface Metadata extends Omit<UploadItem, 'file'> {
+  message: string
+  url: string
+}
 
 const resourceTypes: Array<ResourceType> = [
   'Book',
@@ -49,7 +61,8 @@ const calculateFileSize = (bytes: number) => {
 const uploadFile = async (
   file: UploadItem,
   setProgressState: Dispatch<SetStateAction<number>>,
-  setFiles: Dispatch<SetStateAction<UploadItem[]>>
+  setFiles: Dispatch<SetStateAction<UploadItem[]>>,
+  updateMessage?: String
 ) => {
   const xhr = new XMLHttpRequest()
   const formData = new FormData()
@@ -84,30 +97,100 @@ const uploadFile = async (
       courseIds: [...new Set(file.courseIds)],
       name: file.name,
       type: file.type,
+      message: updateMessage ?? '',
+      url: window.location.origin,
     } as Metadata)
   )
 
   xhr.send(formData)
 }
 
-const Admin: NextPage<Props> = (props) => {
+const branchArray = (data: CourseWithBranch[]): string[] => {
+  const branches = [] as string[]
+  data.forEach((course) => {
+    if (!branches.includes(course.branchName)) {
+      branches.push(course.branchName)
+    }
+  })
+  return branches
+}
+
+const subjectArray = (data: CourseWithBranch[], branch: string): string[] => {
+  const subjects = [] as string[]
+  data.forEach((course) => {
+    if (course.branchName === branch) {
+      if (!subjects.includes(course.description)) {
+        subjects.push(course.description)
+      }
+    }
+  })
+  return subjects
+}
+
+const AdminPanel: NextPage<Props> = (props) => {
   const [progressState, setProgressState] = useState(0)
   const [files, setFiles] = useState<UploadItem[]>([])
   const [defaultSelections, setDefaultSelections] = useState<{
-    collegeId: string
-    courseId: string
-    type: ResourceType
+    collegeId: string | undefined
+    courseId: string | undefined
+    courseDescription: string | undefined
+    courseName: string | undefined
+    type: ResourceType | undefined
   }>({
-    collegeId: '',
-    courseId: '',
+    collegeId: props.colleges[3].id,
+    courseId: props.colleges[3].branches[0].id,
+    courseDescription: props.colleges[3].branches[0].name,
+    courseName: props.colleges[3].branches[0].courses[0].description,
     type: 'Book',
   })
 
+  useEffect(() => {
+    if (defaultSelections.courseDescription && defaultSelections.courseName) {
+      // find the course id
+      const courseId = props.colleges
+        .find((college) => {
+          return college.id === defaultSelections.collegeId
+        })
+        ?.branches.find((branch) => {
+          return branch.name === defaultSelections.courseDescription
+        })
+        ?.courses.find((course) => {
+          return course.description === defaultSelections.courseName
+        })?.id
+      setDefaultSelections((prev) => {
+        return {
+          ...prev,
+          courseId,
+        }
+      })
+    }
+  }, [
+    defaultSelections.courseDescription,
+    defaultSelections.courseName,
+    props.colleges,
+    defaultSelections.collegeId,
+  ])
+
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = async () => {
-    for (const file of files) {
-      await uploadFile(file, setProgressState, setFiles)
+  const upload = () => {
+    if (!defaultSelections.courseDescription || !defaultSelections.courseName) {
+      alert('Please select a course')
+      return
+    } else {
+      const updateMessage = prompt('Enter the update message here...')
+      if (!updateMessage) {
+        return
+      }
+      let index = 0
+      for (const file of files) {
+        if (index === 0) {
+          uploadFile(file, setProgressState, setFiles, updateMessage)
+          index += 1
+        } else {
+          uploadFile(file, setProgressState, setFiles)
+        }
+      }
     }
   }
 
@@ -119,11 +202,11 @@ const Admin: NextPage<Props> = (props) => {
         name: file.name,
         collegeId: defaultSelections.collegeId
           ? defaultSelections.collegeId
-          : props.colleges[0].id,
+          : props.colleges[3].id,
         courseIds: [
           defaultSelections.courseId
             ? defaultSelections.courseId
-            : props.colleges[0].branches[0].courses[0].id,
+            : props.colleges[3].branches[0].courses[0].id,
         ],
         type: defaultSelections.type ? defaultSelections.type : 'Book',
       })
@@ -254,23 +337,44 @@ const Admin: NextPage<Props> = (props) => {
               onChange={(e) => {
                 setDefaultSelections({
                   ...defaultSelections,
-                  courseId: e.target.value,
+                  courseDescription: e.target.value,
                 })
               }}
             >
               <option value=''>Select Course</option>
-              {coursesWithBranch
-                .get(defaultSelections.collegeId)!
-                .map((course) => {
-                  return (
-                    <option
-                      key={course.id + course.branchName}
-                      value={course.id}
-                    >
-                      {`${course.description} / ${course.branchName}`}
-                    </option>
-                  )
-                })}
+              {branchArray(
+                coursesWithBranch.get(defaultSelections.collegeId)!
+              )!.map((course) => {
+                return (
+                  <option key={course} value={course}>
+                    {course}
+                  </option>
+                )
+              })}
+            </select>
+          )}
+
+          {defaultSelections.collegeId && (
+            <select
+              className='text-black border-2 rounded-lg px-4 py-2'
+              onChange={(e) => {
+                setDefaultSelections({
+                  ...defaultSelections,
+                  courseName: e.target.value,
+                })
+              }}
+            >
+              <option value=''>Select Course</option>
+              {subjectArray(
+                coursesWithBranch.get(defaultSelections.collegeId)!,
+                defaultSelections.courseDescription!
+              )!.map((c) => {
+                return (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                )
+              })}
             </select>
           )}
           <select
@@ -430,6 +534,29 @@ const Admin: NextPage<Props> = (props) => {
         </div>
       </div>
     </div>
+  )
+}
+
+const AdminPage: NextPage<Props> = (props) => {
+  const auth = useAuth()
+  return (
+    <>
+      {auth.user ? (
+        <AdminPanel {...props} />
+      ) : (
+        <Link href='/bakshi/login' passHref>
+          <button>Not logged in</button>
+        </Link>
+      )}
+    </>
+  )
+}
+
+const Admin: NextPage<Props> = (props) => {
+  return (
+    <AuthProvider>
+      <AdminPage {...props} />
+    </AuthProvider>
   )
 }
 

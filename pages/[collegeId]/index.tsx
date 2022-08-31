@@ -1,9 +1,9 @@
 import { Branch } from '@prisma/client'
-import Dropdown from 'components/utility/Dropdown'
 import GlassSearch from 'components/utility/GlassSearch'
 import Layout from 'components/utility/Layout'
 import { firstYearTopics, year } from 'dataset'
 import type { GetStaticProps, NextPage } from 'next'
+import Head from 'next/head'
 import Link from 'next/link'
 import { ParsedUrlQuery } from 'querystring'
 import { useState } from 'react'
@@ -59,6 +59,8 @@ const Index: NextPage<Props> = (props) => {
         value={topic}
         key={idx}
         css={'sm:font-normal text-xl px-1'}
+        tooltip={false}
+        titlecase={false}
       />
     )
   })
@@ -76,6 +78,8 @@ const Index: NextPage<Props> = (props) => {
             value={branch.name}
             key={branch.id}
             css='w-full sm:font-normal text-xl'
+            tooltip={false}
+            titlecase={false}
           />
         </a>
       </Link>
@@ -83,27 +87,27 @@ const Index: NextPage<Props> = (props) => {
   })
 
   return (
-    <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
-      <div className='w-full md:w-4/5 lg:2/3 px-8'>
-        <GlassSearch filterResults={filterBranches} />
-      </div>
-      <h1 className='text-6xl text-center mt-8 mb-8 font-bold text-white fresources'>
-        {props.college.toUpperCase()}
-      </h1>
-      <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
-        {yearButtons}
-      </div>
-      <div className='w-full md:hidden px-4'>
-        <Dropdown
-          isActive={isActive}
-          setIsActive={setIsActive}
-          options={year}
-        />
-      </div>
-      <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8  justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
-        {isActive === '1st Year' ? firstYearButtons : branchButtons}
-      </div>
-    </Layout>
+    <>
+      <Head>
+        <title>Fresources - {props.college.toUpperCase()}</title>
+      </Head>
+      <Layout className='text-white w-full py-8 flex flex-col gap-10 md:gap-16 items-center overflow-x-hidden'>
+        <div className='w-full md:w-4/5  px-8'>
+          <GlassSearch filterResults={filterBranches} />
+        </div>
+        <h1 className='text-6xl text-center mt-8 mb-8 font-bold text-white fresources'>
+          {props.college.toUpperCase()}
+        </h1>
+        {props.college.toLowerCase() === 'dtu' && (
+          <div className='justify-center text-white grid grid-cols-2 mx-auto text-center xl:grid-cols-2 xl:gap-4 xl:px-20'>
+            {yearButtons}
+          </div>
+        )}
+        <div className='w-full md:w-4/5 lg:2/3 px-4 sm:px-8  justify-center items-center text-white grid grid-cols-2 pb-5 gap-5 md:grid-cols-3 xl:grid-cols-4'>
+          {isActive === '1st Year' ? firstYearButtons : branchButtons}
+        </div>
+      </Layout>
+    </>
   )
 }
 

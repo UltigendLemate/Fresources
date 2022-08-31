@@ -1,4 +1,4 @@
-import { Viewer, Worker } from '@react-pdf-viewer/core'
+import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import {
   defaultLayoutPlugin,
@@ -34,36 +34,36 @@ const renderToolbar = (Toolbar: any) => (
             width: '100%',
           }}
         >
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <ShowSearchPopover />
           </div>
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <ZoomOut />
           </div>
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <Zoom />
           </div>
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <ZoomIn />
           </div>
-          <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
+          <div className='py-2 ml-auto'>
             <GoToPreviousPage />
           </div>
-          <div className='flex px-0 py-auto flex-wrap text-white justify-center items-center w-full'>
+          <div className='flex px-0 py-auto text-white justify-center items-center w-full '>
             <CurrentPageInput /> / <NumberOfPages />
           </div>
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <GoToNextPage />
           </div>
-          <div style={{ padding: '0px 2px' }}>
+          <div className='py-2'>
             <Download />
           </div>
           <div className='lg:flex hidden'>
-            <div style={{ padding: '0px 2px', marginLeft: 'auto' }}>
+            <div className='py-2 ml-auto'>
               <EnterFullScreen />
             </div>
 
-            <div style={{ padding: '0px 2px' }}>
+            <div className='py-2'>
               <Print />
             </div>
           </div>
@@ -76,6 +76,7 @@ const renderToolbar = (Toolbar: any) => (
 export default function PdfViewer(props: Props) {
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
+    sidebarTabs: () => [],
   })
 
   return (
@@ -84,6 +85,7 @@ export default function PdfViewer(props: Props) {
         fileUrl={props.link}
         plugins={[defaultLayoutPluginInstance]}
         theme='dark'
+        defaultScale={SpecialZoomLevel.PageFit}
       ></Viewer>
     </Worker>
   )

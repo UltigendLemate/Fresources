@@ -3,7 +3,7 @@ import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
-import { Metadata } from '../admin'
+import { Metadata } from '../bakshi'
 
 const s3Client = new AWS.S3({
   endpoint: process.env.DO_SPACES_URL as string,
@@ -65,6 +65,21 @@ export default async function handler(
             resourceIds: { push: dbResourse.id },
           },
         })
+
+        const courseData = await prisma.course.findFirst({
+          where: { id: metadata.courseIds[0] },
+          include: { branches: true },
+        })
+
+        if (metadata.message !== '') {
+          await prisma.updates.create({
+            data: {
+              message: metadata.message,
+              url: `${metadata.url}/${college?.name}/${courseData?.branches[0].name}/${courseData?.description}`,
+              collegeId: metadata.collegeId,
+            },
+          })
+        }
       } catch (e) {
         // eslint-disable-next-line no-console
         console.error(e)
