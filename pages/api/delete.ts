@@ -2,7 +2,8 @@ import assert from 'assert'
 import AWS from 'aws-sdk'
 import { getCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { COOKIE_KEY, validatePasswordHash } from '~/auth/validate'
+import { COOKIE_KEY, USER_TYPE } from '~/auth/deps'
+import { validatePasswordHash } from '~/auth/validate'
 import { prisma } from '~/prisma'
 
 const s3Client = new AWS.S3({
@@ -20,13 +21,15 @@ export default async function handler(
   try {
     const passwordHash = getCookie(COOKIE_KEY, { req, res }) as string
 
+    assert(passwordHash, 'Not authenticated')
     assert(
-      passwordHash && validatePasswordHash(passwordHash),
+      validatePasswordHash(passwordHash) >= USER_TYPE.ADMIN,
       'Not authenticated'
     )
+
     const request_data = JSON.parse(req.body)
     res.status(200).send('success')
-    // return news Promise(() => {
+
     if (!(request_data.college || request_data.fileName))
       return res.status(400).send('No file to delete')
     s3Client.deleteObject(
