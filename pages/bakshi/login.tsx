@@ -18,9 +18,16 @@ const LoginForm = () => {
   return (
     <>
       {auth.user ? (
-        <Link href='/bakshi' passHref>
-          <button>Logged In</button>
-        </Link>
+        <>
+          <Link href='/bakshi' passHref>
+            <button>Logged In</button>
+          </Link>
+          <div>
+            <Link href='/api/auth/logout' passHref>
+              <button>Log Out</button>
+            </Link>
+          </div>
+        </>
       ) : (
         <Layout className='h-screen'>
           <h1 className='text-5xl text-white text-center font-bold mt-10 fresources'>
