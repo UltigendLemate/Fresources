@@ -2,6 +2,7 @@ import { Branch, College, Course, Resource } from '@prisma/client'
 import DeleteModel from 'components/miscellaneous/DeleteModel'
 import { useEffect, useState } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
+import { USER_TYPE } from '~/auth/deps'
 
 type CollegeFiles = College & {
   branches: (Branch & {
@@ -88,7 +89,7 @@ const Index = () => {
 
 const DeletionPanel = () => {
   const auth = useAuth()
-  return auth.user ? <Index /> : <div>Not logged in</div>
+  return auth.user?.type === USER_TYPE.ADMIN ? <Index /> : <div>Contact Admin</div>
 }
 
 const DeletionPage = () => {

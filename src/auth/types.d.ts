@@ -1,5 +1,7 @@
+import { USER_TYPE } from './deps'
+
 export interface User {
   email: string
   name: string
-  password: string
+  type: USER_TYPE
 }

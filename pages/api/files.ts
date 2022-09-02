@@ -1,7 +1,8 @@
 import assert from 'assert'
 import { getCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { COOKIE_KEY, validatePasswordHash } from '~/auth/validate'
+import { COOKIE_KEY, USER_TYPE } from '~/auth/deps'
+import { validatePasswordHash } from '~/auth/validate'
 import { prisma } from '~/prisma'
 
 export default async function handler(
@@ -11,12 +12,13 @@ export default async function handler(
   try {
     const passwordHash = getCookie(COOKIE_KEY, { req, res }) as string
 
+    assert(passwordHash, 'Authenticated')
     assert(
-      passwordHash && validatePasswordHash(passwordHash),
-      'Not authenticated'
+      validatePasswordHash(passwordHash) >= USER_TYPE.ADMIN,
+      'Not enough privilege'
     )
 
-    prisma.college
+    await prisma.college
       .findMany({
         include: {
           branches: {

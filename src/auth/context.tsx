@@ -5,7 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from 'react'
 import { COOKIE_KEY } from './deps'
 
@@ -31,6 +31,7 @@ export function AuthProvider({
   const [error, setError] = useState<boolean | null>()
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingInitial, setLoadingInitial] = useState<boolean>(true)
+
   useEffect(() => {
     if (error) setError(null)
   }, [error])
@@ -41,7 +42,7 @@ export function AuthProvider({
         .then((res) => res.json())
         .then((user: User) => setUser(user))
         // eslint-disable-next-line no-unused-vars
-        .catch((_error: Error) => {})
+        .catch((_error: Error) => { })
         .finally(() => setLoadingInitial(false))
   }, [user])
 

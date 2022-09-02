@@ -8,9 +8,10 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
+import { USER_TYPE } from '~/auth/deps'
 import { prisma } from '~/prisma'
 
 interface UploadItem {
@@ -208,7 +209,7 @@ const AdminPanel: NextPage<Props> = (props) => {
       const extension = prev[index].name.split('.').pop()
       return [
         ...prev.slice(0, index),
-        { ...prev[index], name: `${name}.${extension}` },
+        { ...prev[index], name: `${ name }.${ extension }` },
         ...prev.slice(index + 1),
       ]
     })
@@ -395,21 +396,19 @@ const AdminPanel: NextPage<Props> = (props) => {
           </div>
           <button
             onClick={upload}
-            className={`${
-              files.length > 0
-                ? 'bg-blue-500'
-                : 'bg-blue-300 cursor-not-allowed'
-            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${ files.length > 0
+              ? 'bg-blue-500'
+              : 'bg-blue-300 cursor-not-allowed'
+              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Upload
           </button>
           <div
             onClick={() => setFiles([])}
-            className={`${
-              files.length > 0
-                ? 'bg-blue-500'
-                : 'bg-blue-300 cursor-not-allowed'
-            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${ files.length > 0
+              ? 'bg-blue-500'
+              : 'bg-blue-300 cursor-not-allowed'
+              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Cancel
           </div>
@@ -460,7 +459,7 @@ const AdminPanel: NextPage<Props> = (props) => {
                                 key={course.id + course.branchName}
                                 value={course.id}
                               >
-                                {`${course.description} / ${course.branchName}`}
+                                {`${ course.description } / ${ course.branchName }`}
                               </option>
                             ))}
                         </select>
@@ -528,7 +527,7 @@ const AdminPage: NextPage<Props> = (props) => {
   const auth = useAuth()
   return (
     <>
-      {auth.user ? (
+      {auth?.user?.type && auth.user.type > USER_TYPE.UNAUTHORIZED ? (
         <AdminPanel {...props} />
       ) : (
         <Link href='/bakshi/login' passHref>
