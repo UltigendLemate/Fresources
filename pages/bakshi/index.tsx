@@ -1,5 +1,6 @@
 import { Branch, College, Course, ResourceType } from '@prisma/client'
-import type { GetServerSideProps, NextPage } from 'next'
+import axios from 'axios'
+import type { NextPage } from 'next'
 import Link from 'next/link'
 import {
   Dispatch,
@@ -10,7 +11,7 @@ import {
   useState,
 } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
-import { prisma } from '~/prisma'
+import { USER_TYPE } from '~/auth/deps'
 
 interface UploadItem {
   name: string
@@ -64,32 +65,9 @@ const uploadFile = async (
   setFiles: Dispatch<SetStateAction<UploadItem[]>>,
   updateMessage?: String
 ) => {
-  const xhr = new XMLHttpRequest()
   const formData = new FormData()
 
   formData.append('file', file.file)
-
-  xhr.upload.addEventListener('progress', (event) => {
-    if (event.lengthComputable) {
-      const progress = Math.round((event.loaded * 100) / event.total)
-      setProgressState(progress)
-    }
-  })
-
-  xhr.onreadystatechange = () => {
-    if (xhr.readyState === 4) {
-      setProgressState(0)
-
-      if (xhr.status >= 200 && xhr.status < 300) {
-        setFiles((prev) => {
-          return prev.filter((f) => f !== file)
-        })
-      }
-    }
-  }
-
-  xhr.open('POST', '/api/upload', false)
-
   formData.append(
     'metadata',
     JSON.stringify({
@@ -101,8 +79,17 @@ const uploadFile = async (
       url: '',
     } as Metadata)
   )
-
-  xhr.send(formData)
+  setProgressState(0)
+  return axios
+    .post('/api/upload', formData, {
+      onUploadProgress(progressEvent) {
+        const percentComplete =
+          (progressEvent.loaded * 100) / progressEvent.total
+        setProgressState(percentComplete)
+      },
+    })
+    .then(() => setFiles((prev) => prev.filter((f) => f !== file)))
+    .finally(() => setProgressState(0))
 }
 
 const branchArray = (data: CourseWithBranch[]): string[] => {
@@ -173,7 +160,7 @@ const AdminPanel: NextPage<Props> = (props) => {
 
   const input_ref = useRef<HTMLInputElement>(null)
 
-  const upload = () => {
+  const upload = async () => {
     if (!defaultSelections.courseDescription || !defaultSelections.courseName) {
       alert('Please select a course')
       return
@@ -185,10 +172,10 @@ const AdminPanel: NextPage<Props> = (props) => {
       let index = 0
       for (const file of files) {
         if (index === 0) {
-          uploadFile(file, setProgressState, setFiles, updateMessage)
+          await uploadFile(file, setProgressState, setFiles, updateMessage)
           index += 1
         } else {
-          uploadFile(file, setProgressState, setFiles)
+          await uploadFile(file, setProgressState, setFiles)
         }
       }
     }
@@ -309,8 +296,10 @@ const AdminPanel: NextPage<Props> = (props) => {
         ref={input_ref}
         className='hidden'
       />
+
       <div className='p-4'>
         <h1 className='text-2xl font-extrabold mb-3'>Set Default Selectors</h1>
+        <div className='text-2xl'>{progressState}%</div>
         <div className='flex gap-4'>
           <select
             className='text-black border-2 rounded-lg px-4 py-2'
@@ -395,8 +384,6 @@ const AdminPanel: NextPage<Props> = (props) => {
           </select>
         </div>
       </div>
-
-      <div className='text-2xl'>{progressState}</div>
 
       <div className='px-4 py-4'>
         <div id='options' className='flex gap-4'>
@@ -537,12 +524,33 @@ const AdminPanel: NextPage<Props> = (props) => {
   )
 }
 
-const AdminPage: NextPage<Props> = (props) => {
+const AdminPage: NextPage = () => {
   const auth = useAuth()
+  const [props, setProps] = useState<Props | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [success, setSuccess] = useState<null | boolean>(null)
+  useEffect(() => {
+    if (loading) {
+      setLoading(false)
+      fetch('/api/admin-props')
+        .then((res) => res.json())
+        .then((data) => {
+          setProps({ colleges: data })
+          setSuccess(true)
+        })
+        .catch(() => setSuccess(false))
+    }
+  }, [loading])
   return (
     <>
-      {auth.user ? (
-        <AdminPanel {...props} />
+      {auth?.user?.type && auth.user.type > USER_TYPE.UNAUTHORIZED ? (
+        loading || success === null ? (
+          <h1>Loading please wait...</h1>
+        ) : success ? (
+          <AdminPanel {...props!} />
+        ) : (
+          <h2>An error Occured!</h2>
+        )
       ) : (
         <Link href='/bakshi/login' passHref>
           <button>Not logged in</button>
@@ -552,21 +560,12 @@ const AdminPage: NextPage<Props> = (props) => {
   )
 }
 
-const Admin: NextPage<Props> = (props) => {
+const Admin: NextPage = () => {
   return (
     <AuthProvider>
-      <AdminPage {...props} />
+      <AdminPage />
     </AuthProvider>
   )
 }
 
 export default Admin
-
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const colleges = await prisma.college.findMany({
-    include: { branches: { include: { courses: true } } },
-  })
-  return {
-    props: { colleges },
-  }
-}

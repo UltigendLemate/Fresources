@@ -1,8 +1,14 @@
 import crypto from 'crypto'
+import { USER_TYPE } from './deps'
 
 const SALT = process.env.SALT || 'salt'
 
-export const COOKIE_KEY = 'fresources-jwt'
+export const LEADER_PASSWORD = hashPassword(
+  process.env.LEADER_PASSWORD || 'leader'
+)
+export const ADMIN_PASSWORD = hashPassword(
+  process.env.APP_PASSWORD || 'password'
+)
 
 export function hashPassword(password: string) {
   const hash = crypto
@@ -11,12 +17,15 @@ export function hashPassword(password: string) {
   return hash
 }
 
-export const ADMIN_PASSWORD = hashPassword(
-  process.env.APP_PASSWORD || 'password'
-)
-
 export function validatePasswordHash(hash: string) {
-  return hash === ADMIN_PASSWORD
+  switch (hash) {
+    case LEADER_PASSWORD:
+      return USER_TYPE.LEADER
+    case ADMIN_PASSWORD:
+      return USER_TYPE.ADMIN
+    default:
+      return USER_TYPE.UNAUTHORIZED
+  }
 }
 
 export function validatePassword(password: string) {
