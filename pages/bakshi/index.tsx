@@ -8,7 +8,7 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
 import { prisma } from '~/prisma'
@@ -80,14 +80,16 @@ const uploadFile = async (
     } as Metadata)
   )
   setProgressState(0)
-  return axios.post('/api/upload', formData, {
-    onUploadProgress(progressEvent) {
-      const percentComplete = ((progressEvent.loaded * 100) / progressEvent.total);
-      setProgressState(percentComplete)
-    },
-  }).then(() => setFiles((prev) => prev.filter((f) => f !== file)))
+  return axios
+    .post('/api/upload', formData, {
+      onUploadProgress(progressEvent) {
+        const percentComplete =
+          (progressEvent.loaded * 100) / progressEvent.total
+        setProgressState(percentComplete)
+      },
+    })
+    .then(() => setFiles((prev) => prev.filter((f) => f !== file)))
     .finally(() => setProgressState(0))
-
 }
 
 const branchArray = (data: CourseWithBranch[]): string[] => {
@@ -206,7 +208,7 @@ const AdminPanel: NextPage<Props> = (props) => {
       const extension = prev[index].name.split('.').pop()
       return [
         ...prev.slice(0, index),
-        { ...prev[index], name: `${ name }.${ extension }` },
+        { ...prev[index], name: `${name}.${extension}` },
         ...prev.slice(index + 1),
       ]
     })
@@ -393,19 +395,21 @@ const AdminPanel: NextPage<Props> = (props) => {
           </div>
           <button
             onClick={upload}
-            className={`${ files.length > 0
-              ? 'bg-blue-500'
-              : 'bg-blue-300 cursor-not-allowed'
-              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${
+              files.length > 0
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Upload
           </button>
           <div
             onClick={() => setFiles([])}
-            className={`${ files.length > 0
-              ? 'bg-blue-500'
-              : 'bg-blue-300 cursor-not-allowed'
-              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${
+              files.length > 0
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Cancel
           </div>
@@ -456,7 +460,7 @@ const AdminPanel: NextPage<Props> = (props) => {
                                 key={course.id + course.branchName}
                                 value={course.id}
                               >
-                                {`${ course.description } / ${ course.branchName }`}
+                                {`${course.description} / ${course.branchName}`}
                               </option>
                             ))}
                         </select>
