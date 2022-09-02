@@ -89,7 +89,11 @@ const Index = () => {
 
 const DeletionPanel = () => {
   const auth = useAuth()
-  return auth.user?.type === USER_TYPE.ADMIN ? <Index /> : <div>Contact Admin</div>
+  return auth.user?.type === USER_TYPE.ADMIN ? (
+    <Index />
+  ) : (
+    <div>Contact Admin</div>
+  )
 }
 
 const DeletionPage = () => {
