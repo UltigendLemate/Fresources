@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { setCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { COOKIE_KEY } from '~/auth/deps'
 import { User } from '~/auth/types'
 import { ADMIN_PASSWORD, validatePassword } from '~/auth/validate'
 
@@ -16,7 +17,7 @@ export default function handler(
     const request_data: ReqData = JSON.parse(req.body)
     assert(request_data?.password, 'password is required')
     if (validatePassword(request_data.password)) {
-      setCookie('fresources-jwt', ADMIN_PASSWORD, {
+      setCookie(COOKIE_KEY, ADMIN_PASSWORD, {
         req,
         res,
         maxAge: 60 * 60 * 24,
