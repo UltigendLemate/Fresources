@@ -40,7 +40,9 @@ export default async function handler(
         const data = s3Client.putObject(
           {
             Bucket: process.env.DO_SPACES_BUCKET as string,
-            Key: `${college?.name}/${sanitize(metadata.name)}`,
+            Key: `${college?.name}/${sanitize(
+              metadata.courseIds[0]
+            )}/${sanitize(metadata.name)}`,
             ContentType: file.mimetype!,
             Body: fs.createReadStream(file.filepath),
             ACL: 'public-read',
