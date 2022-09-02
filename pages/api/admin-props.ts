@@ -1,4 +1,3 @@
-import { Updates } from '@prisma/client'
 import assert from 'assert'
 import { getCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -26,5 +25,3 @@ export default async function handler(
     res.status(500).send((e as Error).message)
   }
 }
-
-export type UpdatesResponse = Updates[]
