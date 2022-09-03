@@ -2,6 +2,7 @@ import { Updates } from '@prisma/client'
 import { assert } from 'console'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
+import { IGNORE_STRING } from '~/utils/constants'
 import { Metadata } from '../bakshi'
 
 export default async function handler(
@@ -19,7 +20,7 @@ export default async function handler(
     const dbResourse = await prisma.resource.create({
       data: {
         url: metadata.link!,
-        name: metadata.name,
+        name: metadata.name + '.playlist',
         type: metadata.type,
         courseIds: metadata.courseIds,
       },
@@ -37,7 +38,7 @@ export default async function handler(
       include: { branches: true },
     })
 
-    if (metadata.message !== '') {
+    if (metadata.message !== IGNORE_STRING) {
       await prisma.updates.create({
         data: {
           message: metadata.message,
