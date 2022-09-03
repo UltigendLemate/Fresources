@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-
 const prisma = new PrismaClient()
-
 const dropDatabase = async () => {
   await prisma.branch.deleteMany()
   await prisma.college.deleteMany()
@@ -48,7 +46,6 @@ async function main() {
       },
     },
   })
-
   await prisma.college.create({
     data: {
       name: 'DTU',
@@ -726,7 +723,6 @@ async function main() {
     },
   })
 }
-
 main()
   .then(async () => {
     await prisma.$disconnect()

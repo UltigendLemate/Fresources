@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import { deleteCookie } from 'cookies-next'
 import {
   createContext,
@@ -9,14 +7,15 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { COOKIE_KEY } from './deps'
 
 import { User } from './types'
-import { COOKIE_KEY } from './validate'
 
 interface AuthContextType {
   user?: User
   loading: boolean
   error?: any
+  // eslint-disable-next-line no-unused-vars
   login: (password: string) => Promise<void>
   logout: () => void
 }
@@ -29,20 +28,23 @@ export function AuthProvider({
   children: ReactNode
 }): JSX.Element {
   const [user, setUser] = useState<User | undefined>()
-  const [error, setError] = useState<any>()
+  const [error, setError] = useState<boolean | null>()
   const [loading, setLoading] = useState<boolean>(false)
   const [loadingInitial, setLoadingInitial] = useState<boolean>(true)
+
   useEffect(() => {
     if (error) setError(null)
   }, [error])
 
   useEffect(() => {
-    fetch('/api/auth/user')
-      .then((res) => res.json())
-      .then((user: User) => setUser(user))
-      .catch((_error: Error) => {})
-      .finally(() => setLoadingInitial(false))
-  }, [])
+    !user &&
+      fetch('/api/auth/user')
+        .then((res) => res.json())
+        .then((user: User) => setUser(user))
+        // eslint-disable-next-line no-unused-vars
+        .catch((_error: Error) => {})
+        .finally(() => setLoadingInitial(false))
+  }, [user])
 
   function logout() {
     deleteCookie(COOKIE_KEY)

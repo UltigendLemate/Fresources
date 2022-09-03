@@ -2,6 +2,7 @@ import { Branch, College, Course, Resource } from '@prisma/client'
 import DeleteModel from 'components/miscellaneous/DeleteModel'
 import { useEffect, useState } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
+import { USER_TYPE } from '~/auth/deps'
 
 type CollegeFiles = College & {
   branches: (Branch & {
@@ -64,9 +65,10 @@ const Index = () => {
             <div
               key={resource.id}
               onClick={() => fileDeleteHandler(resource, 'DTU')}
-              className='p-2 w-4/5 bg-slate-900 text-white rounded-lg'
+              className='p-2 w-4/5 bg-slate-900 text-white rounded-lg flex justify-between'
             >
-              {resource.name}
+              <div>{resource.name}</div>
+              <div>{course.description}</div>
             </div>
           )
         })
@@ -87,7 +89,11 @@ const Index = () => {
 
 const DeletionPanel = () => {
   const auth = useAuth()
-  return auth.user ? <Index /> : <div>Not logged in</div>
+  return auth.user?.type === USER_TYPE.ADMIN ? (
+    <Index />
+  ) : (
+    <div>Contact Admin</div>
+  )
 }
 
 const DeletionPage = () => {

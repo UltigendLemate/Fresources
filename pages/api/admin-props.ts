@@ -14,30 +14,13 @@ export default async function handler(
 
     assert(passwordHash, 'Authenticated')
     assert(
-      validatePasswordHash(passwordHash) >= USER_TYPE.ADMIN,
+      validatePasswordHash(passwordHash) >= USER_TYPE.LEADER,
       'Not enough privilege'
     )
-
-    await prisma.college
-      .findMany({
-        include: {
-          branches: {
-            include: {
-              courses: {
-                include: {
-                  resources: true,
-                },
-              },
-            },
-          },
-        },
-      })
-      .then((data) => {
-        res.status(200).send(data)
-      })
-      .catch((err) => {
-        res.status(500).send(err)
-      })
+    const data = await prisma.college.findMany({
+      include: { branches: { include: { courses: true } } },
+    })
+    res.status(200).json(data)
   } catch (e) {
     res.status(500).send((e as Error).message)
   }

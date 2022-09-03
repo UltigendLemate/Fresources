@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import Button from 'components/utility/Button'
 import Layout from 'components/utility/Layout'
+import Link from 'next/link'
 import { FormEventHandler, useRef } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
 
@@ -17,7 +18,16 @@ const LoginForm = () => {
   return (
     <>
       {auth.user ? (
-        <h2>Logged In</h2>
+        <>
+          <Link href='/bakshi' passHref>
+            <button>Logged In</button>
+          </Link>
+          <div>
+            <Link href='/api/auth/logout' passHref>
+              <button>Log Out</button>
+            </Link>
+          </div>
+        </>
       ) : (
         <Layout className='h-screen'>
           <h1 className='text-5xl text-white text-center font-bold mt-10 fresources'>

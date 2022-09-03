@@ -40,7 +40,7 @@ const UpdateBox = (props: Props) => {
             updates.map((update) => {
               return (
                 <div className='divide-y' key={update.id}>
-                  <a href={update.url}>
+                  <a href={`${window.location.origin}/${update.url}`}>
                     <div className='text-white p-4 cursor-pointer hover:bg-gray-600 transition-all flex justify-between'>
                       <div>
                         <div>{update.message}</div>

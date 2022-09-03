@@ -1,9 +1,10 @@
 import assert from 'assert'
 import { getCookie } from 'cookies-next'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { COOKIE_KEY, getUser, USER_TYPE } from '~/auth/deps'
 import { User } from '~/auth/types'
 
-import { COOKIE_KEY, validatePasswordHash } from '~/auth/validate'
+import { validatePasswordHash } from '~/auth/validate'
 
 export default function handler(
   req: NextApiRequest,
@@ -12,9 +13,19 @@ export default function handler(
   try {
     const passwordHash = getCookie(COOKIE_KEY, { req, res }) as string
     assert(passwordHash, 'Not authenticated')
-    if (validatePasswordHash(passwordHash)) {
-      res.status(200).json({ name: 'John Doe', email: '', password: '' })
-    } else throw new Error('Invalid password')
+    switch (validatePasswordHash(passwordHash)) {
+      case USER_TYPE.ADMIN: {
+        res.status(200).json(getUser(USER_TYPE.ADMIN))
+        break
+      }
+      case USER_TYPE.LEADER: {
+        res.status(200).json(getUser(USER_TYPE.LEADER))
+        break
+      }
+      case USER_TYPE.UNAUTHORIZED: {
+        throw new Error('Invalid password')
+      }
+    }
   } catch (e) {
     res.status(500).end()
   }

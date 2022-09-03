@@ -3,7 +3,9 @@ import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
+import { sanitize } from '~/utils/sanitize'
 import { Metadata } from '../bakshi'
+const crypto = require('crypto')
 
 const s3Client = new AWS.S3({
   endpoint: process.env.DO_SPACES_URL as string,
@@ -39,7 +41,9 @@ export default async function handler(
         const data = s3Client.putObject(
           {
             Bucket: process.env.DO_SPACES_BUCKET as string,
-            Key: `${college?.name}/${metadata.name}`,
+            Key: `${college?.name}/${
+              crypto.randomBytes(20).toString('hex') + sanitize(metadata.name)
+            }`,
             ContentType: file.mimetype!,
             Body: fs.createReadStream(file.filepath),
             ACL: 'public-read',
