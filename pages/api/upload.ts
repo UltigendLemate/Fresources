@@ -3,6 +3,7 @@ import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
+import { IGNORE_STRING } from '~/utils/constants'
 import { sanitize } from '~/utils/sanitize'
 import { Metadata } from '../bakshi'
 const crypto = require('crypto')
@@ -76,7 +77,7 @@ export default async function handler(
           include: { branches: true },
         })
 
-        if (metadata.message !== '') {
+        if (metadata.message !== IGNORE_STRING) {
           await prisma.updates.create({
             data: {
               message: metadata.message,
