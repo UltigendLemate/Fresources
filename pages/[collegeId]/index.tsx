@@ -58,7 +58,7 @@ const Index: NextPage<Props> = (props) => {
       <Button.Glass
         value={topic}
         key={idx}
-        css={'sm:font-normal text-xl px-1'}
+        css={'text-xl px-1'}
         tooltip={false}
         titlecase={false}
       />
@@ -77,7 +77,7 @@ const Index: NextPage<Props> = (props) => {
           <Button.Glass
             value={branch.name}
             key={branch.id}
-            css='w-full sm:font-normal text-xl'
+            css='w-full text-xl'
             tooltip={false}
             titlecase={false}
           />
