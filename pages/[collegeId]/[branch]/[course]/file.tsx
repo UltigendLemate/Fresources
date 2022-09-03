@@ -1,5 +1,6 @@
 import Layout from 'components/utility/Layout'
 import PdfViewer from 'components/utility/PdfViewer'
+import VideoViewer from 'components/utility/VideoViewer'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -22,6 +23,8 @@ const Index = () => {
       ?.replace(/\.[^/.]+$/, '') || ''
   )
 
+  const youtubeUrl = fileURL ? new URL(fileURL).searchParams?.get('list') : ''
+
   return (
     <>
       <Head>
@@ -31,6 +34,13 @@ const Index = () => {
         <div className='w-full h-full fixed'>
           {fileURL?.endsWith('pdf') ? (
             <PdfViewer link={fileURL} />
+          ) : fileURL?.includes('youtube') ? (
+            <VideoViewer
+              src={
+                'https://www.youtube.com/embed/videoseries?list=' + youtubeUrl
+              }
+              allowFullScreen={true}
+            />
           ) : (
             <iframe src={fileURL} className='h-full w-full' />
           )}
