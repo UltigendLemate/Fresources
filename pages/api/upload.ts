@@ -1,11 +1,11 @@
 import AWS from 'aws-sdk'
+import crypto from 'crypto'
 import formidable, { File } from 'formidable'
 import fs from 'fs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '~/prisma'
 import { sanitize } from '~/utils/sanitize'
 import { Metadata } from '../bakshi'
-const crypto = require('crypto')
 
 const s3Client = new AWS.S3({
   endpoint: process.env.DO_SPACES_URL as string,
