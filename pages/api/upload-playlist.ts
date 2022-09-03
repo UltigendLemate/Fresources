@@ -19,7 +19,7 @@ export default async function handler(
     const dbResourse = await prisma.resource.create({
       data: {
         url: metadata.link!,
-        name: metadata.name,
+        name: metadata.name + '.playlist',
         type: metadata.type,
         courseIds: metadata.courseIds,
       },
