@@ -78,7 +78,7 @@ export default function PdfViewer(props: Props) {
   const [zoom, setZoom] = useState(0.78)
   setTimeout(() => {
     setZoom(0.79)
-  }, 1);
+  }, 100)
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
     sidebarTabs: () => [],
@@ -92,6 +92,6 @@ export default function PdfViewer(props: Props) {
         theme='dark'
         defaultScale={zoom}
       ></Viewer>
-    </Worker >
+    </Worker>
   )
 }

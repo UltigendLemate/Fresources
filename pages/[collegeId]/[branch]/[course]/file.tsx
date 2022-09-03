@@ -18,7 +18,6 @@ const Index = () => {
       <div className='w-screen md:w-4/5 lg:w-2/3'>
         {fileURL?.endsWith('pdf') ? (
           <PdfViewer link={fileURL} />
-
         ) : (
           <iframe src={fileURL} className='h-full' />
         )}
