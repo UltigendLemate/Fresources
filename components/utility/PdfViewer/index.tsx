@@ -7,7 +7,7 @@ export default function MozillaPdfViewer(props: Props) {
     <div className='sm:w-[80%] h-full flex justify-center text-center m-auto '>
       <iframe
         className='w-full h-full'
-        src={`https://mozilla.github.io/pdf.js/web/viewer.html?file=${ props.link }`}
+        src={`https://mozilla.github.io/pdf.js/web/viewer.html?file=${props.link}`}
       />
     </div>
   )
