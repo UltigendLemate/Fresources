@@ -29,12 +29,13 @@ export default async function handler(
 
   return new Promise(() => {
     form.parse(req, async (_err, fields, files): Promise<any> => {
-      if (!files.file) return res.status(400).send('No file uploaded')
-
       const metadata: Metadata = JSON.parse(fields['metadata'] as string)
 
       try {
+        if (!files.file) return res.status(400).send('No file uploaded')
+
         const file = files.file as File
+
         const college = await prisma.college.findFirst({
           where: { id: metadata.collegeId },
         })

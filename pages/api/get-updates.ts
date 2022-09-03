@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   const data = await prisma.updates.findMany({
     orderBy: { timeStamp: 'desc' },
+    take: 10,
   })
   res.status(200).json(data)
 }
