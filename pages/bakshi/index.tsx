@@ -8,7 +8,7 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from 'react'
 import useAuth, { AuthProvider } from '~/auth/context'
 import { USER_TYPE } from '~/auth/deps'
@@ -18,7 +18,7 @@ interface UploadItem {
   collegeId: string
   courseIds: string[]
   file?: File
-  link?: string;
+  link?: string
   type: ResourceType
 }
 
@@ -69,9 +69,12 @@ const calculateFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 
-const uploadPlaylist = async (data: UploadLink, setProgressState: Dispatch<SetStateAction<number>>,
+const uploadPlaylist = async (
+  data: UploadLink,
+  setProgressState: Dispatch<SetStateAction<number>>,
   setPlaylists: Dispatch<SetStateAction<UploadLink[]>>,
-  updateMessage?: String) => {
+  updateMessage?: String
+) => {
   return axios
     .post('/api/upload-playlist', {
       metadata: {
@@ -82,7 +85,7 @@ const uploadPlaylist = async (data: UploadLink, setProgressState: Dispatch<SetSt
         message: updateMessage ?? '',
         link: data.link,
         url: '',
-      } as Metadata
+      } as Metadata,
     })
     .then(() => setPlaylists((prev) => prev.filter((f) => f !== data)))
     .finally(() => setProgressState(0))
@@ -213,10 +216,14 @@ const AdminPanel: NextPage<Props> = (props) => {
 
       for (const playlist of playlists) {
         if (index === 0) {
-          await uploadPlaylist(playlist, setProgressState, setPlaylists, updateMessage)
+          await uploadPlaylist(
+            playlist,
+            setProgressState,
+            setPlaylists,
+            updateMessage
+          )
           index += 1
-        } else
-          await uploadPlaylist(playlist, setProgressState, setPlaylists)
+        } else await uploadPlaylist(playlist, setProgressState, setPlaylists)
       }
     }
   }
@@ -262,7 +269,6 @@ const AdminPanel: NextPage<Props> = (props) => {
         },
       ]
     })
-
   }
 
   const nameChangeHandler = (name: string, index: number) => {
@@ -270,32 +276,41 @@ const AdminPanel: NextPage<Props> = (props) => {
       const extension = prev[index].name.split('.').pop()
       return [
         ...prev.slice(0, index),
-        { ...prev[index], name: `${ name }.${ extension }` },
+        { ...prev[index], name: `${name}.${extension}` },
         ...prev.slice(index + 1),
       ]
     })
   }
 
-  const collegeChangeHandler = (collegeId: string, index: number, updatePlaylists = false) => {
+  const collegeChangeHandler = (
+    collegeId: string,
+    index: number,
+    updatePlaylists = false
+  ) => {
     if (updatePlaylists) {
       setPlaylists((prev) => {
         return [
           ...prev.slice(0, index),
           {
-            ...prev[index], collegeId,
-            courseIds: coursesWithBranch.get(collegeId)?.length ? [coursesWithBranch.get(collegeId)![0].id] : [],
+            ...prev[index],
+            collegeId,
+            courseIds: coursesWithBranch.get(collegeId)?.length
+              ? [coursesWithBranch.get(collegeId)![0].id]
+              : [],
           },
           ...prev.slice(index + 1),
         ]
       })
-    }
-    else {
+    } else {
       setFiles((prev) => {
         return [
           ...prev.slice(0, index),
           {
-            ...prev[index], collegeId,
-            courseIds: coursesWithBranch.get(collegeId)?.length ? [coursesWithBranch.get(collegeId)![0].id] : [],
+            ...prev[index],
+            collegeId,
+            courseIds: coursesWithBranch.get(collegeId)?.length
+              ? [coursesWithBranch.get(collegeId)![0].id]
+              : [],
           },
           ...prev.slice(index + 1),
         ]
@@ -320,8 +335,7 @@ const AdminPanel: NextPage<Props> = (props) => {
           ...prev.slice(index + 1),
         ]
       })
-    }
-    else {
+    } else {
       setFiles((prev) => {
         const newCourseIds = prev[index] ? [...prev[index].courseIds] : []
         newCourseIds[courseIdIndex] = courseId
@@ -493,19 +507,21 @@ const AdminPanel: NextPage<Props> = (props) => {
 
           <button
             onClick={upload}
-            className={`${ files.length > 0 || playlists.length
-              ? 'bg-blue-500'
-              : 'bg-blue-300 cursor-not-allowed'
-              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${
+              files.length > 0 || playlists.length
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Upload
           </button>
           <div
             onClick={() => setFiles([])}
-            className={`${ files.length > 0
-              ? 'bg-blue-500'
-              : 'bg-blue-300 cursor-not-allowed'
-              } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
+            className={`${
+              files.length > 0
+                ? 'bg-blue-500'
+                : 'bg-blue-300 cursor-not-allowed'
+            } text-white text-2xl font-bold w-fit py-2 px-6 rounded-lg cursor-pointer`}
           >
             Cancel
           </div>
@@ -528,9 +544,8 @@ const AdminPanel: NextPage<Props> = (props) => {
                       ...prev.slice(playlistIdx + 1),
                     ]
                   })
-                }
-
-                } />
+                }}
+              />
 
               <input
                 type='text'
@@ -545,9 +560,8 @@ const AdminPanel: NextPage<Props> = (props) => {
                       ...prev.slice(playlistIdx + 1),
                     ]
                   })
-                }
-
-                } />
+                }}
+              />
 
               <select
                 className='text-black'
@@ -579,16 +593,14 @@ const AdminPanel: NextPage<Props> = (props) => {
                   }
                   value={playlist.courseIds[courseIdIdx]}
                 >
-                  {coursesWithBranch
-                    .get(playlist.collegeId)!
-                    .map((course) => (
-                      <option
-                        key={course.id + course.branchName}
-                        value={course.id}
-                      >
-                        {`${ course.description } / ${ course.branchName }`}
-                      </option>
-                    ))}
+                  {coursesWithBranch.get(playlist.collegeId)!.map((course) => (
+                    <option
+                      key={course.id + course.branchName}
+                      value={course.id}
+                    >
+                      {`${course.description} / ${course.branchName}`}
+                    </option>
+                  ))}
                 </select>
               ))}
 
@@ -605,11 +617,9 @@ const AdminPanel: NextPage<Props> = (props) => {
               >
                 Remove
               </div>
-
-            </div>))
-          }
+            </div>
+          ))}
         </div>
-
 
         <h3 className='pt-10'>Files</h3>
         <div className=' flex flex-col gap-2 mt-4 w-full'>
@@ -658,7 +668,7 @@ const AdminPanel: NextPage<Props> = (props) => {
                                 key={course.id + course.branchName}
                                 value={course.id}
                               >
-                                {`${ course.description } / ${ course.branchName }`}
+                                {`${course.description} / ${course.branchName}`}
                               </option>
                             ))}
                         </select>
