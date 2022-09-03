@@ -16,8 +16,6 @@
   },
   "dependencies": {
     "@prisma/client": "^4.2.1",
-    "@react-pdf-viewer/core": "^3.6.0",
-    "@react-pdf-viewer/default-layout": "^3.6.0",
     "aws-sdk": "^2.1190.0",
     "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
@@ -25,7 +23,6 @@
     "formidable": "^2.0.1",
     "fuse.js": "^6.6.2",
     "next": "latest",
-    "pdfjs-dist": "2.14.305",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-tooltip": "^4.2.21"
