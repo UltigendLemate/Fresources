@@ -1,10 +1,11 @@
-import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
+import { Viewer, Worker } from '@react-pdf-viewer/core'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import {
   defaultLayoutPlugin,
-  ToolbarSlot,
+  ToolbarSlot
 } from '@react-pdf-viewer/default-layout'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
+import { useState } from 'react'
 
 type Props = {
   link: string
@@ -74,6 +75,10 @@ const renderToolbar = (Toolbar: any) => (
 )
 
 export default function PdfViewer(props: Props) {
+  const [zoom, setZoom] = useState(0.78)
+  setTimeout(() => {
+    setZoom(0.79)
+  }, 1);
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
     renderToolbar,
     sidebarTabs: () => [],
@@ -85,8 +90,8 @@ export default function PdfViewer(props: Props) {
         fileUrl={props.link}
         plugins={[defaultLayoutPluginInstance]}
         theme='dark'
-        defaultScale={SpecialZoomLevel.ActualSize}
+        defaultScale={zoom}
       ></Viewer>
-    </Worker>
+    </Worker >
   )
 }
